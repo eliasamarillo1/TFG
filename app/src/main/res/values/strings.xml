@@ -10,5 +10,7 @@
     <string name="registrar">Registrar</string>
     <string name="coffee">Tú Café Favorito</string>
     <string name="getStarted">Get Started</string>
+    <string name="buscar_en_buy_a_coffee">Buscar en Buy A Coffee ... </string>
+    <string name="todo">TODO</string>
 
 </resources>
