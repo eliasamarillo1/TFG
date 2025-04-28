@@ -1,4 +1,4 @@
-package com.example.buyacoffee.activity
+package com.example.buyacoffee.util
 
 /**
  * Designa que metodo de autenticacion estamos usando
