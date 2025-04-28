@@ -1,0 +1,14 @@
+<resources>
+
+
+    <string name="prefs_file"> prefs_file_key</string>
+    <string name="default_web_client_id">1038355507865-mrininmus8c5h81c2ct3pd9ns0li8mbl.apps.googleusercontent.com</string>
+
+    <string name="app_name">BuyACoffee</string>
+    <string name="google">Google</string>
+    <string name="acceder">Acceder</string>
+    <string name="registrar">Registrar</string>
+    <string name="coffee">Tú Café Favorito</string>
+    <string name="getStarted">Get Started</string>
+
+</resources>

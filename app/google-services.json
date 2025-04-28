@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1038355507865",
+    "project_id": "buyacoffe-ea2cb",
+    "storage_bucket": "buyacoffe-ea2cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038355507865:android:8e9c6b247bb67bb9502608",
+        "android_client_info": {
+          "package_name": "com.example.buyacoffee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038355507865-mrininmus8c5h81c2ct3pd9ns0li8mbl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTum2F8-UGZF3C85GM3OMXRo5C9cN6Azk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038355507865-mrininmus8c5h81c2ct3pd9ns0li8mbl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
