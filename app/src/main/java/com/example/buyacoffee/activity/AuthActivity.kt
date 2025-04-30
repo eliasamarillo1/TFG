@@ -73,6 +73,7 @@ class AuthActivity : AppCompatActivity() {
                             Toast.makeText(this, "Error en autenticación", Toast.LENGTH_SHORT).show()
                         }
                     }
+
             } else {
                 Log.w("AuthActivity", "Campos vacíos al registrar")
                 Toast.makeText(this, "Debe completar los campos", Toast.LENGTH_SHORT).show()

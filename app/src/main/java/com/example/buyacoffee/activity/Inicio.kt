@@ -22,19 +22,12 @@ class Inicio : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         setUp()
-
-
     }
-
     private fun setUp(){
         binding.btPantallaInicio.setOnClickListener {
-            val authIntent = Intent(this, AuthActivity::class.java)
+            val authIntent = Intent(this, DashBoardActivity::class.java)
             startActivity(authIntent)
         }
     }
-
-
-
 }
