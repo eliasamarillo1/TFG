@@ -12,5 +12,11 @@
     <string name="getStarted">Get Started</string>
     <string name="buscar_en_buy_a_coffee">Buscar en Buy A Coffee ... </string>
     <string name="todo">TODO</string>
+    <string name="categorias">Categorias</string>
+    <string name="m_s_populares">Más Populares</string>
+    <string name="ver_todos">Ver Todos</string>
+    <string name="explorer">Explorer</string>
+    <string name="cesta">Cesta</string>
+    <string name="pedido">Pedido</string>
 
 </resources>
