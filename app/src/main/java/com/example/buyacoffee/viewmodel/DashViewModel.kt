@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.buyacoffee.model.BannerModel
 import com.example.buyacoffee.model.CategoryModel
+import com.example.buyacoffee.model.ItemsModel
 import com.example.buyacoffee.repositorio.DashBoardRepo
 
 class DashViewModel : ViewModel() {
@@ -15,5 +16,9 @@ class DashViewModel : ViewModel() {
 
     fun loadCategory():LiveData<MutableList<CategoryModel>>{
         return repo.cargarCategorias()
+    }
+
+    fun loadPopular():LiveData<MutableList<ItemsModel>>{
+        return repo.cargarItems()
     }
 }

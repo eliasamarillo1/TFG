@@ -6,9 +6,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.buyacoffee.adapter.CategoryAdapter
+import com.example.buyacoffee.adapter.PopularAdapter
 import com.example.buyacoffee.databinding.ActivityDashBinding
 import com.example.buyacoffee.viewmodel.DashViewModel
 
@@ -30,6 +32,7 @@ class DashBoardActivity : AppCompatActivity() {
 
         initBanner()
         initCategory()
+        initPopular()
 
     }
 
@@ -52,6 +55,15 @@ class DashBoardActivity : AppCompatActivity() {
 
             binding.recyclerViewCategorias.adapter = CategoryAdapter(it)
             binding.progressbarCategorias.visibility = View.GONE
+        }
+    }
+
+    private fun initPopular(){
+        binding.progressBarPopulares.visibility = View.VISIBLE
+        viewModel.loadPopular().observeForever {
+            binding.rvPopulares.layoutManager =GridLayoutManager(this,2)
+            binding.rvPopulares.adapter = PopularAdapter(it)
+            binding.progressBarPopulares.visibility = View.GONE
         }
     }
 }
