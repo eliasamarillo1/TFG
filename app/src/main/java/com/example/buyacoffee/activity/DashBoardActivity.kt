@@ -6,13 +6,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.buyacoffee.adapter.CategoryAdapter
 import com.example.buyacoffee.databinding.ActivityDashBinding
-import com.example.buyacoffee.viewmodel.MainViewModel
+import com.example.buyacoffee.viewmodel.DashViewModel
 
 class DashBoardActivity : AppCompatActivity() {
     lateinit var binding: ActivityDashBinding
-    private val viewModel = MainViewModel()
+    private val viewModel = DashViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,8 @@ class DashBoardActivity : AppCompatActivity() {
         }
 
         initBanner()
+        initCategory()
+
     }
 
     private fun initBanner() {
@@ -36,6 +40,18 @@ class DashBoardActivity : AppCompatActivity() {
                 .load(it[0].url)
                 .into(binding.ivBanner)
             binding.progressBarBanner.visibility = View.GONE
+        }
+    }
+
+    private fun initCategory(){
+        binding.progressbarCategorias.visibility = View.VISIBLE
+        viewModel.loadCategory().observeForever {
+            binding.recyclerViewCategorias.layoutManager =
+                LinearLayoutManager(this@DashBoardActivity, LinearLayoutManager.HORIZONTAL,
+                    false)
+
+            binding.recyclerViewCategorias.adapter = CategoryAdapter(it)
+            binding.progressbarCategorias.visibility = View.GONE
         }
     }
 }

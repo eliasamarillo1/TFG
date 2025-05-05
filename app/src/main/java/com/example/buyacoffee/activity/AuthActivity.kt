@@ -13,6 +13,9 @@ import com.example.buyacoffee.databinding.ActivityAuthBinding
 import com.example.buyacoffee.util.ProviderType
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * Clase para autenticación de usuarios con Firebase.
+ * */
 class AuthActivity : AppCompatActivity() {
     private val GOOGLE_SIGN_IN = 100
     private lateinit var binding: ActivityAuthBinding
@@ -53,7 +56,6 @@ class AuthActivity : AppCompatActivity() {
             Log.d("AuthActivity", "No se encontró sesión activa")
         }
     }
-
     private fun setUp() {
         binding.signUpbtn.setOnClickListener {
             val email = binding.eamilEditText.text.toString()
@@ -104,7 +106,6 @@ class AuthActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun showHome(email: String, provider: ProviderType) {
         Log.d("AuthActivity", "Navegando a Home con $email y $provider")
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
