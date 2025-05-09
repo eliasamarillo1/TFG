@@ -6,14 +6,13 @@
     <string name="firebase_database_url">https://buyacoffe-ea2cb-default-rtdb.europe-west1.firebasedatabase.app</string>
 
 
-
-    <string name="app_name">BuyACoffee</string>
+    <string name="app_name">BuyABeer</string>
     <string name="google">Google</string>
     <string name="acceder">Acceder</string>
     <string name="registrar">Registrar</string>
-    <string name="coffee">Tú Café Favorito</string>
+    <string name="beer">Tú Cerveza Favorita</string>
     <string name="getStarted">Get Started</string>
-    <string name="buscar_en_buy_a_coffee">Buscar en Buy A Coffee ... </string>
+    <string name="buscar_en_buy_a_beer">Buscar en Buy A Beer ... </string>
     <string name="todo">TODO</string>
     <string name="categorias">Categorias</string>
     <string name="m_s_populares">Más Populares</string>
@@ -21,5 +20,17 @@
     <string name="explorer">Explorer</string>
     <string name="cesta">Cesta</string>
     <string name="pedido">Pedido</string>
+    <string name="back">Back</string>
+    <string name="Tamaño">Tamaño</string>
+    <string name="quinto_1_5">Quinto (1/5)</string>
+    <string name="tercio_1_3">Tercio (1/3)</string>
+    <string name="_1_2_l_jarra">1/2 L (Lata)</string>
+    <string name="cantidad">Cantidad</string>
+    <string name="menos"> - </string>
+    <string name="mas">+</string>
+    <string name="_1">1</string>
+    <string name="descripc_n">Descripción</string>
+    <string name="a_adir_a_la_cesta">Añadir a la cesta</string>
+    <string name="_0">0 €</string>
 
 </resources>
