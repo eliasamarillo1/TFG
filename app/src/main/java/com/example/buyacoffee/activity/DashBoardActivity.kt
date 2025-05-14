@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.buyacoffee.adapter.CategoryAdapter
 import com.example.buyacoffee.adapter.PopularAdapter
-import com.example.buyacoffee.databinding.ActivityDashBinding
 import com.example.buyacoffee.viewmodel.DashViewModel
+import com.example.buyacoffee.databinding.ActivityDashBinding
 
 class DashBoardActivity : AppCompatActivity() {
     lateinit var binding: ActivityDashBinding

@@ -1,5 +1,6 @@
 package com.example.buyacoffee.repositorio
 
+import android.app.DownloadManager.Query
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.buyacoffee.model.BannerModel
@@ -88,6 +89,31 @@ class DashBoardRepo {
             }
         })
         return listData
+    }
+
+    fun loadItemByCategory(categoryId: String):LiveData<MutableList<ItemsModel>>{
+        val itemsLiveData = MutableLiveData<MutableList<ItemsModel>>()
+        val ref = firebaseDatabase.getReference("Items")
+        val query:com.google.firebase.database.Query = ref.orderByChild("categoryId").equalTo(categoryId)
+
+        query.addListenerForSingleValueEvent(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<ItemsModel>()
+
+                for (data in snapshot.children) {
+                    val item = data.getValue(ItemsModel::class.java)
+                    item?.let { list.add(it) }
+                }
+                itemsLiveData.value = list            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+        return itemsLiveData
+
     }
 
 }

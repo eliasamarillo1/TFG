@@ -51,6 +51,8 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.auth)
+    implementation(libs.converter.gson)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -9,8 +9,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.buyacoffee.databinding.ActivityAuthBinding
 import com.example.buyacoffee.util.ProviderType
+import com.example.buyacoffee.R
+import com.example.buyacoffee.databinding.ActivityAuthBinding
 import com.google.firebase.auth.FirebaseAuth
 
 /**
@@ -44,7 +45,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun session() {
-        val prefs = getSharedPreferences(getString(com.example.buyacoffee.R.string.prefs_file), MODE_PRIVATE)
+        val prefs = getSharedPreferences(getString(R.string.prefs_file), MODE_PRIVATE)
         val email = prefs.getString("email", null)
         val provider = prefs.getString("provider", null)
 

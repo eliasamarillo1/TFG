@@ -17,6 +17,8 @@ firebaseAuthKtx = "23.2.0"
 playServicesAuth = "21.3.0"
 firebaseDatabaseKtx = "21.0.0"
 glide = "5.0.0-rc01"
+converterGson = "2.11.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +40,7 @@ firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx",
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
 
 
 [plugins]
