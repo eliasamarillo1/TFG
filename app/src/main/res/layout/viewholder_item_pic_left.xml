@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="32dp"
-        android:background="@drawable/white_bg"
+        android:background="@drawable/stroke_green_bg_withe"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,9 +24,12 @@
         android:id="@+id/picMain"
         android:layout_width="145dp"
         android:layout_height="95dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/frameLayout"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/circlImageView"
         app:shapeAppearanceOverlay="@style/circlImageView"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 

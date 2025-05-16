@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.buyacoffee.activity.DetailActivity
 import com.example.buyacoffee.databinding.ViewholderItemPicLeftBinding
 import com.example.buyacoffee.databinding.ViewholderItemPicRigthBinding
@@ -75,6 +76,7 @@ class ItemsListCategoryAdapter(val items: MutableList<ItemsModel>) :
 
                     Glide.with(context)
                         .load(picUrl)
+                        .transform(RoundedCorners(20))
                         .into(holder.binding.picMain)
 
                     holder.itemView.setOnClickListener {
@@ -93,6 +95,7 @@ class ItemsListCategoryAdapter(val items: MutableList<ItemsModel>) :
 
                     Glide.with(context)
                         .load(picUrl)
+                        .transform(RoundedCorners(20))
                         .into(holder.binding.picMain)
 
                     holder.itemView.setOnClickListener {
@@ -113,8 +116,6 @@ class ItemsListCategoryAdapter(val items: MutableList<ItemsModel>) :
             item.rating.toFloat(),
             item.picUrl[0]
         )
-
-
     }
 
 }
