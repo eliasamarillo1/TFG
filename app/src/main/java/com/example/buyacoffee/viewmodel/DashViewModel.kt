@@ -19,10 +19,14 @@ class DashViewModel : ViewModel() {
     }
 
     fun loadPopular():LiveData<MutableList<ItemsModel>>{
-        return repo.cargarItems()
+        return repo.cargarItemsPopulares()
     }
 
-    fun loadItems(categoryId:String):LiveData<MutableList<ItemsModel>>{
+    fun loadItemsByCategory(categoryId:String):LiveData<MutableList<ItemsModel>>{
         return repo.loadItemByCategory(categoryId)
+    }
+
+    fun loadItems():LiveData<MutableList<ItemsModel>>{
+     return repo.cargarItems()
     }
 }

@@ -42,6 +42,9 @@ class DashBoardActivity : AppCompatActivity() {
         binding.cartBtn.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
+        binding.explorador.setOnClickListener {
+            startActivity(Intent(this, ExplorerActivity::class.java))
+        }
     }
 
     private fun initBanner() {
@@ -74,4 +77,6 @@ class DashBoardActivity : AppCompatActivity() {
             binding.progressBarPopulares.visibility = View.GONE
         }
     }
+
+
 }
