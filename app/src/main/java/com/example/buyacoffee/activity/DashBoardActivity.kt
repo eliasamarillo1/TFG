@@ -1,5 +1,6 @@
 package com.example.buyacoffee.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -33,7 +34,14 @@ class DashBoardActivity : AppCompatActivity() {
         initBanner()
         initCategory()
         initPopular()
+        initBtn()
 
+    }
+
+    private fun initBtn() {
+        binding.cartBtn.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
     }
 
     private fun initBanner() {

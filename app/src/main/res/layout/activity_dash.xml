@@ -21,39 +21,6 @@
             android:orientation="vertical"
             android:paddingBottom="80dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="48dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/editTextText"
-                    android:layout_width="281dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/white_bg"
-                    android:drawableStart="@drawable/search_icon"
-                    android:drawablePadding="8dp"
-                    android:ems="10"
-                    android:hint="@string/buscar_en_buy_a_beer"
-                    android:inputType="text"
-                    android:padding="8dp"
-                    android:textColor="@color/darkBrown"
-                    android:textColorHint="@color/darkBrown" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/dark_brown_bg"
-                    android:contentDescription="@string/todo"
-                    android:padding="12dp"
-                    app:srcCompat="@drawable/settings" />
-            </LinearLayout>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -234,6 +201,7 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/cartBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:srcCompat="@drawable/btn_2" />
@@ -266,28 +234,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text="@string/explorer"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/btn_4" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="@string/pedido"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="11sp" />
