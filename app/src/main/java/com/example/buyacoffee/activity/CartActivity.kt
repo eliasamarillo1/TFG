@@ -3,15 +3,11 @@ package com.example.buyacoffee.activity
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.buyacoffee.Helper.ChangeNumberItemsListener
 import com.example.buyacoffee.Helper.ManagmentCar
-import com.example.buyacoffee.R
 import com.example.buyacoffee.adapter.CartAdapter
 import com.example.buyacoffee.databinding.ActivityCartBinding
-import com.example.buyacoffee.databinding.ViewholderCartBinding
 
 class CartActivity : AppCompatActivity() {
     lateinit var bining: ActivityCartBinding
@@ -53,9 +49,10 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun calculateCart() {
-        val prcentTax= 0.02
+
+        val iva= 0.02
         val delivery:Double = 10.0
-        tax = Math.round((managmentCar.getTotalFee() * prcentTax) * 100) / 100.0
+        tax = Math.round((managmentCar.getTotalFee() * iva) * 100) / 100.0
         val total = Math.round((managmentCar.getTotalFee() + tax + delivery) * 100) / 100.0
         val itemTotal = Math.round(managmentCar.getTotalFee() * 100) / 100.0
 

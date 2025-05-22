@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.buyacoffee.adapter.ItemsListCategoryAdapter
-import com.example.buyacoffee.databinding.ActivityExplorerBinding
 import com.example.buyacoffee.databinding.ActivityItemsListBinding
 import com.example.buyacoffee.viewmodel.DashViewModel
 

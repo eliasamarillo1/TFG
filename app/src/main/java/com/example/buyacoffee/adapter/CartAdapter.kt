@@ -56,7 +56,6 @@ class CartAdapter
                     changeNumberIteemsListener?.onChanged()
                 }
 
-
             })
         }
 
@@ -66,17 +65,15 @@ class CartAdapter
                     notifyDataSetChanged()
                     changeNumberIteemsListener?.onChanged()
                 }
-
-
             })
         }
+
         holder.binding.removeItmeBtn.setOnClickListener{
             managmentCar.romveItem(listItemSelected,position,object:ChangeNumberItemsListener{
                 override fun onChanged() {
                     notifyDataSetChanged()
                     changeNumberIteemsListener?.onChanged()
                 }
-
             })
         }
     }

@@ -78,25 +78,6 @@ class DashBoardRepo {
         return listData
     }
 
-    fun cargarItems():LiveData<MutableList<ItemsModel>>{
-        val listData = MutableLiveData<MutableList<ItemsModel>>()
-        val ref = firebaseDatabase.getReference("Items")
-
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val list = mutableListOf<ItemsModel>()
-                for (data in snapshot.children) {
-                    val item = data.getValue(ItemsModel::class.java)
-                    item?.let { list.add(it) }
-                }
-                listData.value = list
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-        return listData }
     /**
      * Recupera en tiempo real la lista de ítems populares desde Firebase.
      *
@@ -125,9 +106,6 @@ class DashBoardRepo {
         })
         return listData
     }
-
-
-
     /**
      * Recupera la lista de ítems pertenecientes a una categoría específica desde Firebase.
      *
@@ -159,4 +137,6 @@ class DashBoardRepo {
         })
         return itemsLiveData
     }
+
+
 }

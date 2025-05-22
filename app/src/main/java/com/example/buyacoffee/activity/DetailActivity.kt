@@ -2,6 +2,7 @@ package com.example.buyacoffee.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -51,7 +52,6 @@ class DetailActivity : AppCompatActivity() {
     private fun bundle() {
         binding.apply {
             item = intent.getSerializableExtra("object") as ItemsModel
-
             Glide.with(this@DetailActivity)
                 .load(item.picUrl[0])
                 .into(binding.picMain)
@@ -69,7 +69,7 @@ class DetailActivity : AppCompatActivity() {
                 cesta.insertItems(item)
             }
             backBtnFlecha.setOnClickListener {
-                startActivity(Intent(this@DetailActivity,DashBoardActivity::class.java))
+                finish()
             }
             plusCart.setOnClickListener{
                 tvCantidadNumerica.text = (item.numberInCart + 1).toString()

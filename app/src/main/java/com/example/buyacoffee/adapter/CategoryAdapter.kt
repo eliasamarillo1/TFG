@@ -18,7 +18,6 @@ class CategoryAdapter(val items: MutableList<CategoryModel>) :
 
     private lateinit var context: Context
     private var selectedPosition = -1
-    private var lastSelectedPosition = -1
 
     inner class ViewHolder(val binding: ViewholderCategoryBinding) :
         RecyclerView.ViewHolder(binding.root)
