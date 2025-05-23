@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.buyacoffee.R
 import com.example.buyacoffee.adapter.CategoryAdapter
 import com.example.buyacoffee.adapter.PopularAdapter
 import com.example.buyacoffee.databinding.ActivityDashBinding
@@ -24,6 +26,7 @@ import com.google.firebase.database.ValueEventListener
 class DashBoardActivity : AppCompatActivity() {
     lateinit var binding: ActivityDashBinding
     private val viewModel = DashViewModel()
+    private lateinit var itemsAdapter: PopularAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +44,8 @@ class DashBoardActivity : AppCompatActivity() {
         initBanner()
         initCategory()
         initPopular()
+        setupSearchView()
+        initAllItemsDisplay()
         initBtn()
 
         val ref =
@@ -105,6 +110,62 @@ class DashBoardActivity : AppCompatActivity() {
             binding.progressBarPopulares.visibility = View.GONE
         }
     }
+    private fun initAllItemsDisplay() {
+        binding.progressBarPopulares.visibility = View.VISIBLE // Reutilizamos la progress bar
+        viewModel.loadAllItems() // Carga todos los ítems
+
+        viewModel.displayedItems.observe(this) { items ->
+            if (!::PopularAdapter.isOpen) {
+                // Inicializa el adaptador la primera vez que se reciben datos
+                itemsAdapter = PopularAdapter(items)
+                binding.rvPopulares.layoutManager = GridLayoutManager(this, 2) // Reutilizamos el RecyclerView
+                binding.rvPopulares.adapter = itemsAdapter
+            } else {
+                // Actualiza la lista en el adaptador existente
+                itemsAdapter.updateList(items)
+            }
+            binding.progressBarPopulares.visibility = View.GONE
+            // Opcional: Mostrar un mensaje si la lista filtrada está vacía
+            // binding.noResultsText.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+        }
+    }
+
+
+    private fun setupSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (!newText.isNullOrBlank()) {
+                    binding.tituloPopulares.text = getString(R.string.productos) // Cambia el título al buscar
+                    viewModel.filterItems(newText)
+                }
+                return true
+            }
+        })
+
+        // Cuando se enfoca el SearchView (se toca)
+        binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.tituloPopulares.text = getString(R.string.productos)
+                viewModel.loadAllItems()
+            }
+        }
+
+        // Cuando se cierra (al pulsar la X)
+        binding.searchView.setOnCloseListener {
+            binding.tituloPopulares.text = getString(R.string.populares) // Restaurar el título original
+            viewModel.loadPopular().observe(this@DashBoardActivity) {
+                itemsAdapter = PopularAdapter(it)
+                binding.rvPopulares.adapter = itemsAdapter
+            }
+            false
+        }
+    }
 
 
 }
+
+

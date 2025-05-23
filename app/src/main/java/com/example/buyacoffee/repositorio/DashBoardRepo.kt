@@ -1,5 +1,6 @@
 package com.example.buyacoffee.repositorio
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.buyacoffee.model.BannerModel
@@ -137,6 +138,35 @@ class DashBoardRepo {
         })
         return itemsLiveData
     }
+    /**
+     * Recupera en tiempo real la lista completa de ítems desde Firebase.
+     *
+     * Consulta la referencia "Items" y convierte los datos a [ItemsModel],
+     * emitiendo los resultados mediante LiveData.
+     *
+     * @return [LiveData] con una lista mutable de [ItemsModel] actualizada en tiempo real.
+     */
+    fun loadAllItems(): LiveData<MutableList<ItemsModel>> {
+        val listData = MutableLiveData<MutableList<ItemsModel>>()
+        val ref = firebaseDatabase.getReference("Items")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<ItemsModel>()
+                for (childSnapshot in snapshot.children) {
+                    childSnapshot.getValue(ItemsModel::class.java)?.let {
+                        list.add(it)
+                    }
+                }
+                listData.value = list
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error según sea necesario
+                Log.e("DashBoardRepo", "Error loading all items: ${error.message}")
+                listData.value = mutableListOf() // Devolver una lista vacía en caso de error
+            }
+        })
+        return listData
+    }
 
 }

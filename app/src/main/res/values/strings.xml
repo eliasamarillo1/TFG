@@ -33,5 +33,7 @@
     <string name="a_adir_a_la_cesta">Añadir a la cesta</string>
     <string name="euro"> € </string>
     <string name="list">List</string>
+    <string name="populares">Populares</string>
+    <string name="productos">Productos</string>
 
 </resources>

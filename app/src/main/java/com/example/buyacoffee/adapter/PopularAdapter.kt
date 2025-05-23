@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 
-class PopularAdapter(val items: MutableList<ItemsModel>) :
+class PopularAdapter(var items: MutableList<ItemsModel>) :
     RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
     lateinit var context: Context
 
@@ -44,5 +44,10 @@ class PopularAdapter(val items: MutableList<ItemsModel>) :
     }
 
     override fun getItemCount() = items.size
+
+    fun updateList(newList: MutableList<ItemsModel>) {
+        items = newList
+        notifyDataSetChanged() // Notifica al RecyclerView que los datos han cambiado
+    }
 
 }

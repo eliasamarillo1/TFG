@@ -1,6 +1,7 @@
 package com.example.buyacoffee.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.buyacoffee.model.BannerModel
 import com.example.buyacoffee.model.CategoryModel
@@ -14,6 +15,11 @@ import com.example.buyacoffee.repositorio.DashBoardRepo
  */
 class DashViewModel : ViewModel() {
     private val repo = DashBoardRepo()
+
+    private val _allItems = MutableLiveData<MutableList<ItemsModel>>()
+
+    private val _displayedItems = MutableLiveData<MutableList<ItemsModel>>()
+    val displayedItems: LiveData<MutableList<ItemsModel>> get() = _displayedItems
 
     /**
      * Carga la lista de banners desde el repositorio.
@@ -52,4 +58,30 @@ class DashViewModel : ViewModel() {
         return repo.loadItemByCategory(categoryId)
     }
 
+    /**
+     * Carga la lista completa de ítems desde el repositorio.
+     */
+    fun loadAllItems() {
+        repo.loadAllItems().observeForever {
+            _allItems.value = it // Almacena la lista completa
+            _displayedItems.value = it // Inicialmente, muestra todos los ítems
+        }
+    }
+    /**
+     * Filtra la lista de ítems mostrados basándose en una consulta.
+     *
+     * @param query Texto de búsqueda.
+     */
+    fun filterItems(query: String?) {
+        val currentAllItems = _allItems.value ?: mutableListOf()
+        val filteredList = if (query.isNullOrEmpty()) {
+            currentAllItems // Si el texto está vacío, muestra la lista completa
+        } else {
+            currentAllItems.filter {
+                // Filtra por título (puedes añadir descripción u otros campos si es necesario)
+                it.title.contains(query, ignoreCase = true)
+            }.toMutableList()
+        }
+        _displayedItems.value = filteredList // Actualiza la lista mostrada
+    }
 }
