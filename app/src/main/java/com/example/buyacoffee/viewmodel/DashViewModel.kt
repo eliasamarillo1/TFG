@@ -82,4 +82,9 @@ class DashViewModel : ViewModel() {
         }
         _displayedItems.value = filteredList // Actualiza la lista mostrada
     }
+
+     fun getAllItemsOnce(): List<ItemsModel> {
+        loadAllItems()
+        return displayedItems.value ?: emptyList()
+    }
 }

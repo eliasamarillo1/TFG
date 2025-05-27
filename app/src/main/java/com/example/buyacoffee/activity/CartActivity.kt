@@ -11,9 +11,13 @@ import com.example.buyacoffee.Helper.ManagmentCar
 import com.example.buyacoffee.adapter.CartAdapter
 import com.example.buyacoffee.databinding.ActivityCartBinding
 import com.example.buyacoffee.model.ItemsModel
-import com.example.buyacoffee.model.LastOrderManager
 import com.google.firebase.database.FirebaseDatabase
-
+/**
+ * Representa el carrito de compras.
+ *
+ * Esta clase muestra los productos añadidos al carrito, permite aplicar descuentos,
+ * calcular el total a pagar y realizar el pedido.
+ */
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var managmentCar: ManagmentCar
@@ -30,10 +34,12 @@ class CartActivity : AppCompatActivity() {
 
         calculateCart()
         initCartlist()
-        setVariable()
-        setupDiscountButton()
-        setupPayButton()
+        initButtons()
     }
+
+    /**
+     * Inicializa el RecyclerView con los productos del carrito usando CartAdapter.
+     */
     private fun initCartlist() {
         binding.cartView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -47,13 +53,9 @@ class CartActivity : AppCompatActivity() {
             }
         )
     }
-    private fun setVariable() {
-        binding.backBtn.setOnClickListener {
-            finish()
-        }
-    }
 
-    private fun setupPayButton() {
+    private fun initButtons() {
+
         binding.payBtn.setOnClickListener {
             val cartItems: ArrayList<ItemsModel> = ArrayList(managmentCar.getListCart())
             val totalFee = Math.round((managmentCar.getTotalFee() + impuesto + 10.0) * 100) / 100.0
@@ -69,29 +71,14 @@ class CartActivity : AppCompatActivity() {
             startActivity(intent)
 
         }
-    }
-    private fun calculateCart() {
-        val iva = 0.02
-        val baseFee = managmentCar.getTotalFee()
 
-        // Aplicar descuento por porcentaje si existe
-        val descuento = (baseFee * descuentoAplicado / 100.0).let {
-            Math.round(it * 100) / 100.0
+        binding.backBtn.setOnClickListener {
+            startActivity(Intent(this, DashBoardActivity::class.java))
         }
-
-        val precioConDescuento = baseFee - descuento
-        impuesto = Math.round((precioConDescuento * iva) * 100) / 100.0
-        val total = Math.round((precioConDescuento + impuesto ) * 100) / 100.0
-
-        val itemTotal = Math.round(precioConDescuento * 100) / 100.0
-
-        binding.totalFreetxt.text = "$itemTotal €"
-        binding.ivatxt.text = "$impuesto €"
-        binding.totalTxt.text = "$total €"
-    }
-
-
-    private fun setupDiscountButton() {
+        /**
+         * Configura el botón de aplicar descuento.
+         * Verifica el código en Firebase y si es válido, aplica el porcentaje correspondiente.
+         */
         binding.applyDiscountBtn.setOnClickListener {
             val code = binding.discountCodeEditText.text.toString().uppercase().trim()
             if (code.isBlank()) {
@@ -101,6 +88,7 @@ class CartActivity : AppCompatActivity() {
 
             val ref = FirebaseDatabase.getInstance().getReference("Descuentos").child(code)
             ref.get().addOnSuccessListener { snapshot ->
+
                 if (snapshot.exists()) {
                     val valor = snapshot.child("valor").value.toString().toDoubleOrNull() ?: 0.0
                     descuentoAplicado = valor
@@ -115,6 +103,34 @@ class CartActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    /**
+     * Calcula el total del carrito aplicando descuentos e impuestos.
+     * Actualiza los textos en pantalla con los valores correspondientes.
+     */
+    private fun calculateCart() {
+        val iva = 0.02
+        val baseFee = managmentCar.getTotalFee()
+
+        // Aplicar descuento por porcentaje si existe
+        val descuento = (baseFee * descuentoAplicado / 100.0).let {
+            Math.round(it * 100) / 100.0
+        }
+
+        val precioConDescuento = baseFee - descuento
+
+        impuesto = Math.round((precioConDescuento * iva) * 100) / 100.0
+        val total = Math.round((precioConDescuento + impuesto ) * 100) / 100.0
+        val itemTotal = Math.round(precioConDescuento * 100) / 100.0
+
+        binding.totalFreetxt.text = "$itemTotal €"
+        binding.ivatxt.text = "$impuesto €"
+        binding.totalTxt.text = "$total €"
+    }
+
+
+
 
 
 }
