@@ -12,7 +12,6 @@
     <string name="registrar">Registrar</string>
     <string name="beer">Tú Cerveza Favorita</string>
     <string name="getStarted">Get Started</string>
-    <string name="buscar_en_buy_a_beer">Buscar en Buy A Beer ... </string>
     <string name="todo">TODO</string>
     <string name="categorias">Categorias</string>
     <string name="m_s_populares">Más Populares</string>
@@ -35,5 +34,6 @@
     <string name="list">List</string>
     <string name="populares">Populares</string>
     <string name="productos">Productos</string>
+    <string name="tu_pedido">Tu pedido:</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.example.buyacoffee.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.example.buyacoffee.adapter.PopularAdapter
 import com.example.buyacoffee.databinding.ActivityDashBinding
 import com.example.buyacoffee.model.ItemsModel
 import com.example.buyacoffee.viewmodel.DashViewModel
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -27,6 +29,8 @@ class DashBoardActivity : AppCompatActivity() {
     lateinit var binding: ActivityDashBinding
     private val viewModel = DashViewModel()
     private lateinit var itemsAdapter: PopularAdapter
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,34 +45,13 @@ class DashBoardActivity : AppCompatActivity() {
             insets
         }
 
+
         initBanner()
         initCategory()
         initPopular()
         setupSearchView()
         initAllItemsDisplay()
         initBtn()
-
-        val ref =
-            FirebaseDatabase.getInstance().getReference("Items")
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (data in snapshot.children) {
-
-                    val producto = data.getValue(ItemsModel::class.java)
-
-                    if (producto != null) {
-                        Log.d("Productooo", "EL id es: " + producto.id)
-                    }
-
-
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
     }
 
     private fun initBtn() {
@@ -76,6 +59,10 @@ class DashBoardActivity : AppCompatActivity() {
             startActivity(Intent(this, CartActivity::class.java))
         }
         binding.explorador.setOnClickListener {
+        }
+        binding.pedido.setOnClickListener {
+            val intent = Intent(this, LastOrderActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -164,7 +151,6 @@ class DashBoardActivity : AppCompatActivity() {
             false
         }
     }
-
 
 }
 

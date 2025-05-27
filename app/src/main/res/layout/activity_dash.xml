@@ -217,6 +217,29 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/pedido"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/btn_4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/pedido"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
                         android:id="@+id/cartBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -232,27 +255,6 @@
                         android:textSize="11sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/btn_5" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="Perfil"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="11sp" />
-                </LinearLayout>
 
             </LinearLayout>
 

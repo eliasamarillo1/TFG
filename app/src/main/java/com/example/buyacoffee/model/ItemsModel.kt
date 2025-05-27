@@ -13,7 +13,6 @@ import java.io.Serializable
  * @property numberInCart Número de unidades del producto en el carrito.
  * @property extra Información adicional o personalizada del producto.
  * @property id Identificador único del producto.
- *
  * Implementa [Serializable] para permitir que los objetos puedan ser pasados entre componentes de Android.
  */
 data class ItemsModel(
@@ -26,3 +25,23 @@ data class ItemsModel(
     var extra: String = "",
     var id: String = ""
 ) : Serializable
+
+
+object LastOrderManager {
+
+    var lastOrderItems: List<ItemsModel>? = null
+    var lastOrderTotalFee: Double? = null
+
+    fun saveOrder(items: List<ItemsModel>, total: Double) {
+        lastOrderItems = items
+        lastOrderTotalFee = total
+    }
+
+
+    fun clearLastOrder() {
+        lastOrderItems = null
+        lastOrderTotalFee = null
+    }
+
+}
+

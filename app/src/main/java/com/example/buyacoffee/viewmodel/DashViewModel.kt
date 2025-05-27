@@ -15,9 +15,7 @@ import com.example.buyacoffee.repositorio.DashBoardRepo
  */
 class DashViewModel : ViewModel() {
     private val repo = DashBoardRepo()
-
     private val _allItems = MutableLiveData<MutableList<ItemsModel>>()
-
     private val _displayedItems = MutableLiveData<MutableList<ItemsModel>>()
     val displayedItems: LiveData<MutableList<ItemsModel>> get() = _displayedItems
 
