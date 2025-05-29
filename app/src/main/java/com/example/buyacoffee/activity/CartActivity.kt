@@ -62,7 +62,7 @@ class CartActivity : AppCompatActivity() {
 
         binding.payBtn.setOnClickListener {
             val cartItems: ArrayList<ItemsModel> = ArrayList(managmentCar.getListCart())
-            val totalFee = Math.round((managmentCar.getTotalFee() + impuesto + 10.0) * 100) / 100.0
+            val totalFee = Math.round((managmentCar.getTotalFee() + impuesto ) * 100) / 100.0
             val intent = Intent(this, TicketActivity::class.java)
 
 

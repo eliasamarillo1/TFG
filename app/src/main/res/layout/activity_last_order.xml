@@ -4,57 +4,123 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
-
+    android:background="@color/cream"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:background="@color/greenClaro"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="24dp">
 
-        >
+        <!-- Header con icono -->
+        <ImageView
+            android:id="@+id/iconLastOrder"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/btn_4"
+            app:layout_constraintEnd_toStartOf="@+id/tvUltPedido"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/black" />
+
         <TextView
             android:id="@+id/tvUltPedido"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="12dp"
             android:text="@string/ultimo_pedido_realizado"
+            android:textColor="@color/black"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:textSize="20sp"/>
-        <LinearLayout
-            android:id="@+id/orderLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iconLastOrder"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Card Container -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/orderCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="24dp"
+            android:elevation="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/orderCodeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/tu_pedido"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            app:layout_constraintTop_toBottomOf="@+id/tvUltPedido">
 
             <LinearLayout
-                android:id="@+id/itemsContainer"
+                android:id="@+id/orderLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Header del pedido con línea decorativa -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:id="@+id/orderCodeText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/tu_pedido"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Separador sutil -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Container de items con fondo sutil -->
+                <LinearLayout
+                    android:id="@+id/itemsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp" />
+
+                <!-- Footer con información adicional -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        app:tint="@color/greenClaro" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </ScrollView>

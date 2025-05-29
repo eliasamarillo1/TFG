@@ -2,6 +2,7 @@ package com.example.buyacoffee.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +22,16 @@ class TicketActivity : AppCompatActivity() {
         binding = ActivityTicketBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         val cartItems = intent.getSerializableExtra("cartItems") as? ArrayList<ItemsModel>
         val totalFee = intent.getDoubleExtra("totalFee", 0.0)
+        Log.d("DEBUG_TOTAL", "Total recibido: $totalFee")
+
 
         val orderCode = generateRandomCode()
         binding.textViewOrderCode.text = "Tu pedido [$orderCode] ha sido enviado!"
-        binding.textViewTotalFee.text = "Total: $%.2f".format(totalFee)
+        binding.textViewTotalFee.text = "Total: %.2f".format(totalFee) + " €"
 
         displayCartItems(cartItems)
 
@@ -46,7 +51,7 @@ class TicketActivity : AppCompatActivity() {
 
         cartItems?.forEach { item ->
             val itemTextView = TextView(this).apply {
-                text = "${item.title} x${item.numberInCart} - $%.2f".format(item.price * item.numberInCart)
+                text = "${item.title} x ${item.numberInCart} - $%.2f".format(item.price * item.numberInCart)
                 textSize = 16f
             }
             binding.linearLayoutItems.addView(itemTextView)

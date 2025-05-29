@@ -44,5 +44,6 @@
     <string name="total_iva">Total IVA</string>
     <string name="total">TOTAL</string>
     <string name="ultimo_pedido_realizado">Ultimo pedido realizado</string>
+    <string name="pedido_completado">pedidocompl</string>
 
 </resources>

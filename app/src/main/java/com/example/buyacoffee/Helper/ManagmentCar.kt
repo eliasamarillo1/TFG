@@ -1,6 +1,8 @@
 package com.example.buyacoffee.Helper
 
 import android.content.Context
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
+import android.util.Log
 import android.widget.Toast
 import com.example.buyacoffee.model.ItemsModel
 
@@ -99,9 +101,14 @@ class ManagmentCar(val context: Context) {
         val listItem = getListCart()
         var fee = 0.0
         for (item in listItem) {
+
             fee += item.price * item.numberInCart
+
+            Log.d("Item", item.title + " " + item.price + " " + item.numberInCart)
         }
+        Log.d("Total", fee.toString())
         return fee
+
     }
     /**
      * Limpia el carrito de compras.
