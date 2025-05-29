@@ -23,10 +23,10 @@ class Inicio : AppCompatActivity() {
         }
         setUp()
     }
+
     private fun setUp(){
         binding.btPantallaInicio.setOnClickListener {
-            val authIntent = Intent(this, DashBoardActivity::class.java)
-            startActivity(authIntent)
+            startActivity(Intent(this, DashBoardActivity::class.java))
         }
     }
 }

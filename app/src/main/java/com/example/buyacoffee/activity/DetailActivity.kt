@@ -49,6 +49,7 @@ class DetailActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun bundle() {
         binding.apply {
             item = intent.getSerializableExtra("object") as ItemsModel
@@ -71,6 +72,7 @@ class DetailActivity : AppCompatActivity() {
             backBtnFlecha.setOnClickListener {
                 finish()
             }
+
             plusCart.setOnClickListener{
                 tvCantidadNumerica.text = (item.numberInCart + 1).toString()
                 item.numberInCart++

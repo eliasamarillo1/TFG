@@ -13,6 +13,7 @@ class LastOrderActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLastOrderBinding
     private lateinit var managmentCar: ManagmentCar
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLastOrderBinding.inflate(layoutInflater)

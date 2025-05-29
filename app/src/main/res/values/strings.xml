@@ -35,5 +35,14 @@
     <string name="populares">Populares</string>
     <string name="productos">Productos</string>
     <string name="tu_pedido">Tu pedido:</string>
+    <string name="itemrandom">itemRandom</string>
+    <string name="realizar_pedido">Realizar Pedido</string>
+    <string name="descuento">Descuento</string>
+    <string name="aplicar">Aplicar</string>
+    <string name="signoeuro">€</string>
+    <string name="sub_total">Sub Total</string>
+    <string name="total_iva">Total IVA</string>
+    <string name="total">TOTAL</string>
+    <string name="ultimo_pedido_realizado">Ultimo pedido realizado</string>
 
 </resources>

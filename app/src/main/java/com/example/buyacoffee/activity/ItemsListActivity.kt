@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.buyacoffee.adapter.ItemsListCategoryAdapter
 import com.example.buyacoffee.databinding.ActivityItemsListBinding
+import com.example.buyacoffee.repositorio.showProgressBar
 import com.example.buyacoffee.viewmodel.DashViewModel
 
 class ItemsListActivity : AppCompatActivity() {
@@ -35,15 +36,17 @@ class ItemsListActivity : AppCompatActivity() {
 
     private fun initList() {
         binding.apply {
-            progressBar.visibility = View.VISIBLE
+
+            showProgressBar(progressBar, true)
             viewModel.loadItemsByCategory(id).observe(this@ItemsListActivity, Observer {
                 listView.layoutManager = LinearLayoutManager(
                     this@ItemsListActivity,
                     LinearLayoutManager.VERTICAL, false
                 )
                 listView.adapter = ItemsListCategoryAdapter(it)
-                progressBar.visibility = View.GONE
+                showProgressBar(progressBar, false)
             })
+
             backBtn.setOnClickListener { finish() }
         }
     }

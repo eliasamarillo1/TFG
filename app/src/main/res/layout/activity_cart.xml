@@ -49,7 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Back"
+                        android:text="@string/back"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
 
@@ -59,7 +59,7 @@
                     android:id="@+id/categoryTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cesta"
+                    android:text="@string/cesta"
                     android:textColor="@color/black"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -95,9 +95,10 @@
             android:layout_height="48dp"
             android:background="#00000000"
             android:ems="10"
-            android:hint="Descuento"
+            android:hint="@string/descuento"
             android:inputType="text"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
@@ -110,7 +111,7 @@
             android:layout_weight="1"
 
             android:background="@drawable/gree_full_corner"
-            android:text="Aplicar"
+            android:text="@string/aplicar"
             android:textColor="@color/white" />
 
 
@@ -137,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text=" €"
+                android:text="@string/signoeuro"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
@@ -147,7 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="  €"
+                android:text="@string/signoeuro"
 
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -158,7 +159,7 @@
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sub Total"
+                android:text="@string/sub_total"
                 android:textColor="@color/black"
                 android:textStyle="bold"
 
@@ -169,7 +170,7 @@
                 android:id="@+id/totalFreetxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" -€"
+                android:text="@string/signoeuro"
                 android:textColor="@color/black"
                 android:textStyle="bold"
 
@@ -181,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Total IVA"
+                android:text="@string/total_iva"
                 android:textColor="@color/black"
 
                 android:textStyle="bold"
@@ -203,7 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="TOTAL"
+                android:text="@string/total"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
@@ -214,12 +215,12 @@
             android:id="@+id/payBtn"
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="0dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-android:layout_margin="16dp"
+            android:layout_margin="16dp"
             android:background="@drawable/gree_full_corner"
-            android:text="Pagar"
+            android:text="@string/realizar_pedido"
             android:textColor="@color/white" />
     </LinearLayout>
 

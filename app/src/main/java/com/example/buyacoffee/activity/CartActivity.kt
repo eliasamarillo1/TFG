@@ -12,15 +12,11 @@ import com.example.buyacoffee.adapter.CartAdapter
 import com.example.buyacoffee.databinding.ActivityCartBinding
 import com.example.buyacoffee.model.ItemsModel
 import com.google.firebase.database.FirebaseDatabase
-/**
- * Representa el carrito de compras.
- *
- * Esta clase muestra los productos añadidos al carrito, permite aplicar descuentos,
- * calcular el total a pagar y realizar el pedido.
- */
+
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var managmentCar: ManagmentCar
+
     private var impuesto: Double = 0.0
     private var descuentoAplicado = 0.0
 
@@ -29,9 +25,13 @@ class CartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         managmentCar = ManagmentCar(this)
 
+        initiCart()
+
+    }
+
+    private fun initiCart() {
         calculateCart()
         initCartlist()
         initButtons()
@@ -41,8 +41,12 @@ class CartActivity : AppCompatActivity() {
      * Inicializa el RecyclerView con los productos del carrito usando CartAdapter.
      */
     private fun initCartlist() {
+
         binding.cartView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(this,
+                LinearLayoutManager.VERTICAL,
+                false)
+
         binding.cartView.adapter = CartAdapter(
             managmentCar.getListCart(),
             this,
@@ -59,12 +63,13 @@ class CartActivity : AppCompatActivity() {
         binding.payBtn.setOnClickListener {
             val cartItems: ArrayList<ItemsModel> = ArrayList(managmentCar.getListCart())
             val totalFee = Math.round((managmentCar.getTotalFee() + impuesto + 10.0) * 100) / 100.0
+            val intent = Intent(this, TicketActivity::class.java)
+
 
             if (cartItems.isEmpty()) {
                 Toast.makeText(this, "El carrito está vacío", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // Esto detiene la ejecución si el carrito está vacío
             }
-            val intent = Intent(this, TicketActivity::class.java)
             intent.putExtra("cartItems", cartItems)
             intent.putExtra("totalFee", totalFee)
 
@@ -75,25 +80,31 @@ class CartActivity : AppCompatActivity() {
         binding.backBtn.setOnClickListener {
             startActivity(Intent(this, DashBoardActivity::class.java))
         }
+
         /**
          * Configura el botón de aplicar descuento.
          * Verifica el código en Firebase y si es válido, aplica el porcentaje correspondiente.
          */
+
         binding.applyDiscountBtn.setOnClickListener {
             val code = binding.discountCodeEditText.text.toString().uppercase().trim()
+            val ref = FirebaseDatabase.getInstance().getReference("Descuentos").child(code)
+            var valor: Double
+
             if (code.isBlank()) {
                 Toast.makeText(this, "Introduce un código", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val ref = FirebaseDatabase.getInstance().getReference("Descuentos").child(code)
+            //addOnSuccessListener es un callBack que se ejecuta cuando la operación de lectura es exitosa.
             ref.get().addOnSuccessListener { snapshot ->
-
                 if (snapshot.exists()) {
-                    val valor = snapshot.child("valor").value.toString().toDoubleOrNull() ?: 0.0
+                     valor = snapshot.child("valor").value.toString().toDoubleOrNull() ?: 0.0
                     descuentoAplicado = valor
+
                     Toast.makeText(this, "Descuento del $valor% aplicado", Toast.LENGTH_SHORT)
                         .show()
+
                     calculateCart()
                 } else {
                     Toast.makeText(this, "Código no válido", Toast.LENGTH_SHORT).show()
