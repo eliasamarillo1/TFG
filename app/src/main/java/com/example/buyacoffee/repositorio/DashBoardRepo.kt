@@ -16,7 +16,6 @@ import com.google.firebase.database.ValueEventListener
  * para las secciones del dashboard de la aplicación como banners, categorías e ítems.
  */
 class DashBoardRepo {
-
     //TODO meter esto en rsc
     private val firebaseDatabase = FirebaseDatabase.getInstance("https://buyacoffe-ea2cb-default-rtdb.europe-west1.firebasedatabase.app")
 
@@ -29,6 +28,7 @@ class DashBoardRepo {
      *
      * @return [LiveData] que emite una lista mutable de [BannerModel] cada vez que hay cambios en los datos.
      */
+
     fun cargarBanner(): LiveData<MutableList<BannerModel>> {
         val listData = MutableLiveData<MutableList<BannerModel>>()
         val ref = firebaseDatabase.getReference("Banner")

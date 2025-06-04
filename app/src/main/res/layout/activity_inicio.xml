@@ -5,19 +5,21 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/beer">
+    android:background="@drawable/buyabeer">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="176dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginEnd="32dp"
         android:text="@string/beer"
         android:textColor="@color/cream"
-        android:textSize="30sp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.408"
+        app:layout_constraintHorizontal_bias="0.463"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="50dp"
         android:layout_marginTop="332dp"
-        android:backgroundTint="@color/green"
+        android:backgroundTint="@color/greenOscuro"
         android:text="@string/getStarted"
         android:textColor="@color/cream"
         android:textSize="20sp"

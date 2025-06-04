@@ -1,11 +1,11 @@
 package com.example.buyacoffee.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import android.content.Intent
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.buyacoffee.Helper.ManagmentCar
@@ -69,10 +69,11 @@ class DetailActivity : AppCompatActivity() {
                 )
                 cesta.insertItems(item)
             }
-            backBtnFlecha.setOnClickListener {
+            backBtn.setOnClickListener {
+                val intent = Intent(this@DetailActivity, DashBoardActivity::class.java)
+                startActivity(intent)
                 finish()
             }
-
             plusCart.setOnClickListener{
                 tvCantidadNumerica.text = (item.numberInCart + 1).toString()
                 item.numberInCart++
