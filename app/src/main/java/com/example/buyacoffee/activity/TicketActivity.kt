@@ -6,9 +6,9 @@ import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.buyacoffee.Helper.ManagmentCar
 import com.example.buyacoffee.databinding.ActivityTicketBinding
 import com.example.buyacoffee.model.ItemsModel
+import com.example.buyacoffee.repositorio.CartRepo
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,8 +35,8 @@ class TicketActivity : AppCompatActivity() {
 
         displayCartItems(cartItems)
 
-        val managmentCar = ManagmentCar(this)
-        subirPedidoAFirebase(orderCode, totalFee, cartItems)
+        val managmentCar = CartRepo(this)
+        managmentCar.subirPedidoAFirebase(orderCode, totalFee, cartItems)
         managmentCar.saveLastOrder(orderCode, cartItems ?: arrayListOf())
 
         binding.buttonBack.setOnClickListener {
@@ -58,35 +58,6 @@ class TicketActivity : AppCompatActivity() {
         }
     }
 
-    private fun subirPedidoAFirebase(codigo: String, total: Double, items: ArrayList<ItemsModel>?) {
-        val database = FirebaseDatabase.getInstance()
-        val pedidosRef = database.getReference("Pedidos")
-
-        val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
-
-        val itemsReducidos = items?.map {
-            mapOf(
-                "title" to it.title,
-                "price" to it.price,
-                "numberInCart" to it.numberInCart
-            )
-        }
-
-        val pedidoMap = mapOf(
-            "codigo" to codigo,
-            "total" to total,
-            "fecha" to fechaHora,
-            "items" to itemsReducidos
-        )
-
-        pedidosRef.child(codigo).setValue(pedidoMap)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Pedido guardado correctamente", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Error al guardar el pedido", Toast.LENGTH_SHORT).show()
-            }
-    }
 
     private fun generateRandomCode(length: Int = 5): String {
         val caracteres = ('A'..'Z') + ('0'..'9')

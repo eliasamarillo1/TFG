@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.repositorio.CartRepo
 import com.example.buyacoffee.databinding.ActivityLastOrderBinding
-import com.example.buyacoffee.model.ItemsModel
 
 class LastOrderActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLastOrderBinding
-    private lateinit var managmentCar: ManagmentCar
+    private lateinit var managmentCar: CartRepo
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +18,7 @@ class LastOrderActivity : AppCompatActivity() {
         binding = ActivityLastOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        managmentCar = ManagmentCar(this)
+        managmentCar = CartRepo(this)
 
         val codigo = managmentCar.getLastOrderCode()
         val items = managmentCar.getLastOrderItems()

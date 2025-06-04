@@ -78,7 +78,6 @@ class DashBoardRepo {
         })
         return listData
     }
-
     /**
      * Recupera en tiempo real la lista de ítems populares desde Firebase.
      *

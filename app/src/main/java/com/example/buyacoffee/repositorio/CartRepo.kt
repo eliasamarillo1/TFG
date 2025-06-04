@@ -1,18 +1,23 @@
-package com.example.buyacoffee.Helper
+package com.example.buyacoffee.repositorio
 
 import android.content.Context
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.util.Log
 import android.widget.Toast
+import com.example.buyacoffee.Helper.ChangeNumberItemsListener
+import com.example.buyacoffee.Helper.TinyDB
 import com.example.buyacoffee.model.ItemsModel
+import com.example.buyacoffee.model.PedidoModel
+import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * Clase encargada de gestionar el carrito de compras de la aplicación.
  *
  * @property context Contexto de la aplicación, necesario para acceder a recursos y mostrar mensajes.
  */
-class ManagmentCar(val context: Context) {
-
+class CartRepo(val context: Context) {
     private val tinyDB = TinyDB(context)
     companion object {
         private const val CART_KEY = "CartList"
@@ -129,6 +134,36 @@ class ManagmentCar(val context: Context) {
         return tinyDB.getString(LAST_ORDER_CODE_KEY) ?: ""
     }
 
+     fun subirPedidoAFirebase(codigo: String, total: Double, items: ArrayList<ItemsModel>?) {
+        val database = FirebaseDatabase.getInstance()
+        val pedidosRef = database.getReference("Pedidos")
+        val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+
+        val itemsReducidos = items?.map {
+            mapOf(
+                "title" to it.title,
+                "price" to it.price,
+                "numberInCart" to it.numberInCart
+            )
+        }
+
+         var pedido = PedidoModel(codigo, total.toString(), fechaHora , items.toString())
+
+         val pedidoMap = mapOf(
+            "codigo" to codigo,
+            "total" to total,
+            "fecha" to fechaHora,
+            "items" to itemsReducidos
+        )
+
+        pedidosRef.child(codigo).setValue(pedidoMap)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Pedido guardado correctamente", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Error al guardar el pedido", Toast.LENGTH_SHORT).show()
+            }
+    }
 
 
 }

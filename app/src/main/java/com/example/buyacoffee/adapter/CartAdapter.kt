@@ -9,7 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.buyacoffee.Helper.ChangeNumberItemsListener
-import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.repositorio.CartRepo
 import com.example.buyacoffee.databinding.ViewholderCartBinding
 import com.example.buyacoffee.model.ItemsModel
 
@@ -23,7 +23,7 @@ class CartAdapter
 
     class Viewholder(val binding: ViewholderCartBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private val managmentCar: ManagmentCar = ManagmentCar(context)
+    private val managmentCar: CartRepo = CartRepo(context)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartAdapter.Viewholder {

@@ -7,15 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.buyacoffee.Helper.ChangeNumberItemsListener
-import com.example.buyacoffee.Helper.ManagmentCar
 import com.example.buyacoffee.adapter.CartAdapter
 import com.example.buyacoffee.databinding.ActivityCartBinding
 import com.example.buyacoffee.model.ItemsModel
+import com.example.buyacoffee.repositorio.CartRepo
 import com.google.firebase.database.FirebaseDatabase
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private lateinit var managmentCar: ManagmentCar
+    private lateinit var managmentCar: CartRepo
 
     private var impuesto: Double = 0.0
     private var descuentoAplicado = 0.0
@@ -25,7 +25,7 @@ class CartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        managmentCar = ManagmentCar(this)
+        managmentCar = CartRepo(this)
 
         initiCart()
 

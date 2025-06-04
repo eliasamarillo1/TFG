@@ -37,7 +37,6 @@ class DashBoardActivity : AppCompatActivity() {
         initComponents()
     }
 
-
     //INICIALIZADORES
     /**
      * Inicializa todos los componentes de la interfaz de usuario.
@@ -127,7 +126,6 @@ class DashBoardActivity : AppCompatActivity() {
         }
     }
 
-
     //SETUPS
     /**
      * Configura el RecyclerView con los ítems proporcionados.
@@ -165,7 +163,6 @@ class DashBoardActivity : AppCompatActivity() {
             .into(binding.pic)
 
     }
-
 
     //CREATE
     /**
@@ -212,7 +209,6 @@ class DashBoardActivity : AppCompatActivity() {
         }
     }
 
-
     //NAVIGATE
     /**
      * Navega al DetailActivity
@@ -234,7 +230,6 @@ class DashBoardActivity : AppCompatActivity() {
     private fun navigateToLastOrder() {
         startActivity(Intent(this, LastOrderActivity::class.java))
     }
-
 
     //ITEMS
     /**
@@ -300,7 +295,6 @@ class DashBoardActivity : AppCompatActivity() {
             }
         }
     }
-
     /**
      * Actualiza el título de la sección de productos.
      *
@@ -317,7 +311,4 @@ class DashBoardActivity : AppCompatActivity() {
     private fun showErrorToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
-
-
 }

@@ -1,14 +1,11 @@
 package com.example.buyacoffee.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
 import android.content.Intent
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
-import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.repositorio.CartRepo
 import com.example.buyacoffee.model.ItemsModel
 import com.example.buyacoffee.R
 import com.example.buyacoffee.databinding.ActivityDetailBinding
@@ -16,7 +13,7 @@ import com.example.buyacoffee.databinding.ActivityDetailBinding
 class DetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityDetailBinding
     private lateinit var item: ItemsModel
-    private lateinit var cesta:ManagmentCar
+    private lateinit var cesta: CartRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +21,7 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        cesta = ManagmentCar(this)
+        cesta = CartRepo(this)
         bundle()
         initSizeList()
 

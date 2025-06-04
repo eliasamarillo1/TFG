@@ -1,7 +1,6 @@
 package com.example.buyacoffee.model
 
 import java.io.Serializable
-
 /**
  * Modelo de datos que representa un ítem de producto en la aplicación.
  *
@@ -15,6 +14,7 @@ import java.io.Serializable
  * @property id Identificador único del producto.
  * Implementa [Serializable] para permitir que los objetos puedan ser pasados entre componentes de Android.
  */
+
 data class ItemsModel(
     var title: String = "",
     var description: String = "",
@@ -27,21 +27,6 @@ data class ItemsModel(
 ) : Serializable
 
 
-object LastOrderManager {
-
-    var lastOrderItems: List<ItemsModel>? = null
-    var lastOrderTotalFee: Double? = null
-
-    fun saveOrder(items: List<ItemsModel>, total: Double) {
-        lastOrderItems = items
-        lastOrderTotalFee = total
-    }
 
 
-    fun clearLastOrder() {
-        lastOrderItems = null
-        lastOrderTotalFee = null
-    }
-
-}
 
