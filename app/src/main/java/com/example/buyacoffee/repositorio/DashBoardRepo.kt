@@ -28,7 +28,6 @@ class DashBoardRepo {
      *
      * @return [LiveData] que emite una lista mutable de [BannerModel] cada vez que hay cambios en los datos.
      */
-
     fun cargarBanner(): LiveData<MutableList<BannerModel>> {
         val listData = MutableLiveData<MutableList<BannerModel>>()
         val ref = firebaseDatabase.getReference("Banner")
@@ -44,7 +43,8 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e("DashBoardRepo", "Error loading banners: ${error.message}")
+                listData.value = mutableListOf()
             }
         })
         return listData
@@ -73,11 +73,13 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e("DashBoardRepo", "Error loading categories: ${error.message}")
+                listData.value = mutableListOf()
             }
         })
         return listData
     }
+
     /**
      * Recupera en tiempo real la lista de ítems populares desde Firebase.
      *
@@ -101,11 +103,13 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e("DashBoardRepo", "Error loading popular items: ${error.message}")
+                listData.value = mutableListOf()
             }
         })
         return listData
     }
+
     /**
      * Recupera la lista de ítems pertenecientes a una categoría específica desde Firebase.
      *
@@ -132,11 +136,13 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e("DashBoardRepo", "Error loading items by category: ${error.message}")
+                itemsLiveData.value = mutableListOf()
             }
         })
         return itemsLiveData
     }
+
     /**
      * Recupera en tiempo real la lista completa de ítems desde Firebase.
      *
@@ -148,6 +154,7 @@ class DashBoardRepo {
     fun loadAllItems(): LiveData<MutableList<ItemsModel>> {
         val listData = MutableLiveData<MutableList<ItemsModel>>()
         val ref = firebaseDatabase.getReference("Items")
+
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<ItemsModel>()
@@ -160,12 +167,10 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar el error según sea necesario
                 Log.e("DashBoardRepo", "Error loading all items: ${error.message}")
                 listData.value = mutableListOf() // Devolver una lista vacía en caso de error
             }
         })
         return listData
     }
-
 }

@@ -3,22 +3,22 @@ package com.example.buyacoffee.repositorio
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import com.example.buyacoffee.Helper.ChangeNumberItemsListener
 import com.example.buyacoffee.Helper.TinyDB
 import com.example.buyacoffee.model.ItemsModel
-import com.example.buyacoffee.model.PedidoModel
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 /**
- * Clase encargada de gestionar el carrito de compras de la aplicación.
+ * Repositorio encargado de gestionar los datos del carrito de compras.
+ * Maneja el almacenamiento local y las operaciones con Firebase.
  *
- * @property context Contexto de la aplicación, necesario para acceder a recursos y mostrar mensajes.
+ * @property context Contexto de la aplicación, necesario para acceder a recursos.
  */
-class CartRepo(val context: Context) {
+class CartRepo(private val context: Context) {
     private val tinyDB = TinyDB(context)
+
     companion object {
         private const val CART_KEY = "CartList"
         private const val LAST_ORDER_ITEMS_KEY = "LastOrderItems"
@@ -40,7 +40,7 @@ class CartRepo(val context: Context) {
         } else {
             listItem.add(item)
         }
-        tinyDB.putListObject("CartList", listItem)
+        tinyDB.putListObject(CART_KEY, listItem)
         Toast.makeText(context, "Added to your Cart", Toast.LENGTH_SHORT).show()
     }
 
@@ -50,51 +50,17 @@ class CartRepo(val context: Context) {
      * @return Una lista mutable de [ItemsModel] que representa el contenido del carrito.
      */
     fun getListCart(): ArrayList<ItemsModel> {
-        return tinyDB.getListObject("CartList") ?: arrayListOf()
+        return tinyDB.getListObject(CART_KEY) ?: arrayListOf()
     }
 
     /**
-     * Disminuye en uno la cantidad del ítem indicado en la posición dada.
-     * Si la cantidad llega a 1, elimina el ítem del carrito.
+     * Actualiza la lista del carrito en el almacenamiento local.
+     * Método agregado para compatibilidad con MVVM.
      *
-     * @param listItems Lista actual del carrito.
-     * @param position Índice del ítem a modificar.
-     * @param listener Callback para notificar cambios.
+     * @param items Lista actualizada de items del carrito.
      */
-    fun minusItem(listItems: ArrayList<ItemsModel>, position: Int, listener: ChangeNumberItemsListener) {
-        if (listItems[position].numberInCart == 1) {
-            listItems.removeAt(position)
-        } else {
-            listItems[position].numberInCart--
-        }
-        tinyDB.putListObject("CartList", listItems)
-        listener.onChanged()
-    }
-
-    /**
-     * Elimina un ítem del carrito según su posición.
-     *
-     * @param listItems Lista actual del carrito.
-     * @param position Índice del ítem a eliminar.
-     * @param listener Callback para notificar cambios.
-     */
-    fun romveItem(listItems: ArrayList<ItemsModel>, position: Int, listener: ChangeNumberItemsListener) {
-        listItems.removeAt(position)
-        tinyDB.putListObject("CartList", listItems)
-        listener.onChanged()
-    }
-
-    /**
-     * Aumenta en uno la cantidad del ítem indicado en la posición dada.
-     *
-     * @param listItems Lista actual del carrito.
-     * @param position Índice del ítem a modificar.
-     * @param listener Callback para notificar cambios.
-     */
-    fun plusItem(listItems: ArrayList<ItemsModel>, position: Int, listener: ChangeNumberItemsListener) {
-        listItems[position].numberInCart++
-        tinyDB.putListObject("CartList", listItems)
-        listener.onChanged()
+    fun updateCartInStorage(items: ArrayList<ItemsModel>) {
+        tinyDB.putListObject(CART_KEY, items)
     }
 
     /**
@@ -106,35 +72,78 @@ class CartRepo(val context: Context) {
         val listItem = getListCart()
         var fee = 0.0
         for (item in listItem) {
-
             fee += item.price * item.numberInCart
-
-            Log.d("Item", item.title + " " + item.price + " " + item.numberInCart)
+            Log.d("CartRepo", "Item: ${item.title}, Price: ${item.price}, Quantity: ${item.numberInCart}")
         }
-        Log.d("Total", fee.toString())
+        Log.d("CartRepo", "Total Fee: $fee")
         return fee
-
     }
+
+    /**
+     * Valida un código de descuento en Firebase.
+     *
+     * @param code Código de descuento a validar.
+     * @param onResult Callback que retorna (esValido, valorDescuento, mensaje).
+     */
+    fun validateDiscountCode(code: String, onResult: (Boolean, Double, String) -> Unit) {
+        val ref = FirebaseDatabase.getInstance().getReference("Descuentos").child(code)
+
+        ref.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                val valor = snapshot.child("valor").value.toString().toDoubleOrNull() ?: 0.0
+                onResult(true, valor, "Descuento aplicado correctamente")
+            } else {
+                onResult(false, 0.0, "Código no válido")
+            }
+        }.addOnFailureListener {
+            onResult(false, 0.0, "Error al validar el código")
+        }
+    }
+
     /**
      * Limpia el carrito de compras.
      */
     fun clearCart() {
-        tinyDB.remove("CartList")
+        tinyDB.remove(CART_KEY)
     }
 
+    /**
+     * Guarda información del último pedido realizado.
+     *
+     * @param codigo Código del pedido.
+     * @param items Lista de items del pedido.
+     */
     fun saveLastOrder(codigo: String, items: List<ItemsModel>) {
         tinyDB.putListObject(LAST_ORDER_ITEMS_KEY, ArrayList(items))
         tinyDB.putString(LAST_ORDER_CODE_KEY, codigo)
     }
+
+    /**
+     * Obtiene los items del último pedido.
+     *
+     * @return Lista de items del último pedido.
+     */
     fun getLastOrderItems(): ArrayList<ItemsModel> {
         return tinyDB.getListObject(LAST_ORDER_ITEMS_KEY) ?: arrayListOf()
     }
 
+    /**
+     * Obtiene el código del último pedido.
+     *
+     * @return Código del último pedido.
+     */
     fun getLastOrderCode(): String {
         return tinyDB.getString(LAST_ORDER_CODE_KEY) ?: ""
     }
 
-     fun subirPedidoAFirebase(codigo: String, total: Double, items: ArrayList<ItemsModel>?) {
+    /**
+     * Sube un pedido a Firebase Realtime Database.
+     *
+     * @param codigo Código único del pedido.
+     * @param total Total del pedido.
+     * @param items Lista de items del pedido.
+     */
+    fun subirPedidoAFirebase(codigo: String, total: Double, items: ArrayList<ItemsModel>?) {
         val database = FirebaseDatabase.getInstance()
         val pedidosRef = database.getReference("Pedidos")
         val fechaHora = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
@@ -147,9 +156,7 @@ class CartRepo(val context: Context) {
             )
         }
 
-         var pedido = PedidoModel(codigo, total.toString(), fechaHora , items.toString())
-
-         val pedidoMap = mapOf(
+        val pedidoMap = mapOf(
             "codigo" to codigo,
             "total" to total,
             "fecha" to fechaHora,
@@ -165,5 +172,31 @@ class CartRepo(val context: Context) {
             }
     }
 
+    // MÉTODOS LEGACY - Mantenidos para compatibilidad con código existente
+    // Estos métodos están marcados como deprecated y deberían ser migrados al ViewModel
 
+    @Deprecated("Use ViewModel methods instead")
+    fun minusItem(listItems: ArrayList<ItemsModel>, position: Int, listener: com.example.buyacoffee.Helper.ChangeNumberItemsListener) {
+        if (listItems[position].numberInCart == 1) {
+            listItems.removeAt(position)
+        } else {
+            listItems[position].numberInCart--
+        }
+        tinyDB.putListObject(CART_KEY, listItems)
+        listener.onChanged()
+    }
+
+    @Deprecated("Use ViewModel methods instead")
+    fun romveItem(listItems: ArrayList<ItemsModel>, position: Int, listener: com.example.buyacoffee.Helper.ChangeNumberItemsListener) {
+        listItems.removeAt(position)
+        tinyDB.putListObject(CART_KEY, listItems)
+        listener.onChanged()
+    }
+
+    @Deprecated("Use ViewModel methods instead")
+    fun plusItem(listItems: ArrayList<ItemsModel>, position: Int, listener: com.example.buyacoffee.Helper.ChangeNumberItemsListener) {
+        listItems[position].numberInCart++
+        tinyDB.putListObject(CART_KEY, listItems)
+        listener.onChanged()
+    }
 }

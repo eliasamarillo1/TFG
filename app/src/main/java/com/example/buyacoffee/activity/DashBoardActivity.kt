@@ -18,6 +18,7 @@ import com.example.buyacoffee.adapter.PopularAdapter
 import com.example.buyacoffee.databinding.ActivityDashBinding
 import com.example.buyacoffee.databinding.ViewholderPopularBinding
 import com.example.buyacoffee.model.ItemsModel
+import com.example.buyacoffee.repositorio.DashBoardRepo
 import com.example.buyacoffee.repositorio.showProgressBar
 import com.example.buyacoffee.viewmodel.DashViewModel
 import kotlinx.coroutines.launch
@@ -27,6 +28,7 @@ class DashBoardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashBinding
     private val viewModel = DashViewModel()
     private lateinit var itemsAdapter: PopularAdapter
+    private val dashBoardRepo = DashBoardRepo()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,7 @@ class DashBoardActivity : AppCompatActivity() {
         initAllItemsDisplay()
         initClickListeners()
     }
+
     /**
      * Configura los listeners de los botones de navegación.
      */
@@ -65,6 +68,7 @@ class DashBoardActivity : AppCompatActivity() {
             loadRandomItem()
         }
     }
+
     /**
      * Inicializa y carga el banner principal de la aplicación.
      */
@@ -80,6 +84,7 @@ class DashBoardActivity : AppCompatActivity() {
             showProgressBar(binding.progressBarBanner, false)
         }
     }
+
     /**
      * Inicializa y carga las categorías de productos.
      */
@@ -98,6 +103,7 @@ class DashBoardActivity : AppCompatActivity() {
             showProgressBar(binding.progressbarCategorias, false)
         }
     }
+
     /**
      * Inicializa y carga los productos populares.
      */
@@ -109,6 +115,7 @@ class DashBoardActivity : AppCompatActivity() {
             showProgressBar(binding.progressBarPopulares, false)
         }
     }
+
     /**
      * Inicializa la visualización de todos los ítems disponibles.
      */
@@ -139,6 +146,7 @@ class DashBoardActivity : AppCompatActivity() {
             adapter = itemsAdapter
         }
     }
+
     /**
      * Configura la funcionalidad del SearchView para buscar productos.
      */
@@ -149,6 +157,7 @@ class DashBoardActivity : AppCompatActivity() {
             setOnCloseListener(createCloseListener())
         }
     }
+
     /**
      * Configura la vista del ítem (misma lógica que PopularAdapter.onBindViewHolder)
      */
@@ -161,7 +170,6 @@ class DashBoardActivity : AppCompatActivity() {
             .load(item.picUrl.firstOrNull())
             .fitCenter()
             .into(binding.pic)
-
     }
 
     //CREATE
@@ -178,6 +186,7 @@ class DashBoardActivity : AppCompatActivity() {
             }
         }
     }
+
     /**
      * Crea el listener para el cierre del SearchView.
      *
@@ -190,6 +199,7 @@ class DashBoardActivity : AppCompatActivity() {
             false
         }
     }
+
     /**
      * Crea el listener para cambios en el texto de búsqueda.
      *
@@ -218,12 +228,14 @@ class DashBoardActivity : AppCompatActivity() {
         intent.putExtra("object", item)
         startActivity(intent)
     }
+
     /**
      * Navega a la actividad del carrito de compras.
      */
     private fun navigateToCart() {
         startActivity(Intent(this, CartActivity::class.java))
     }
+
     /**
      * Navega a la actividad de último pedido.
      */
@@ -231,7 +243,7 @@ class DashBoardActivity : AppCompatActivity() {
         startActivity(Intent(this, LastOrderActivity::class.java))
     }
 
-    //ITEMS
+    // FUNCIONES QUE ESTABAN MAL UBICADAS EN EL REPOSITORIO
     /**
      * Maneja el resultado de la carga de ítems aleatorios.
      *
@@ -245,6 +257,7 @@ class DashBoardActivity : AppCompatActivity() {
             showRandomItemDialog(randomItem)
         }
     }
+
     /**
      * Muestra un diálogo con información de un ítem aleatorio.
      *
@@ -252,27 +265,29 @@ class DashBoardActivity : AppCompatActivity() {
      */
     private fun showRandomItemDialog(item: ItemsModel) {
         // mismo layout que los ítems populares
-        val binding = ViewholderPopularBinding.inflate(layoutInflater)
+        val dialogBinding = ViewholderPopularBinding.inflate(layoutInflater)
 
         // Configurar el ítem como el adapter
-        setupItemView(binding, item)
+        setupItemView(dialogBinding, item)
 
         // Crear el diálogo
         val dialog = AlertDialog.Builder(this)
-            .setView(binding.root)
+            .setView(dialogBinding.root)
             .setCancelable(true)
             .create()
 
         dialog.setOnShowListener {
-            dialog.window?.setLayout(800, 750) // Ajusta estos númerosv
+            dialog.window?.setLayout(800, 750) // Ajusta estos números
         }
+
         // Configurar click listener para navegar al detalle (misma lógica que el adapter)
-        binding.root.setOnClickListener {
+        dialogBinding.root.setOnClickListener {
             dialog.dismiss()
             navigateToDetail(item)
         }
         dialog.show()
     }
+
     /**
      * Restaura la vista de productos populares.
      */
@@ -282,6 +297,7 @@ class DashBoardActivity : AppCompatActivity() {
             binding.rvPopulares.adapter = itemsAdapter
         }
     }
+
     /**
      * Carga un ítem aleatorio y lo muestra en un diálogo.
      */
@@ -295,6 +311,7 @@ class DashBoardActivity : AppCompatActivity() {
             }
         }
     }
+
     /**
      * Actualiza el título de la sección de productos.
      *
@@ -303,6 +320,7 @@ class DashBoardActivity : AppCompatActivity() {
     private fun updateTitle(title: String) {
         binding.tituloPopulares.text = title
     }
+
     /**
      * Muestra un mensaje de error como Toast.
      *

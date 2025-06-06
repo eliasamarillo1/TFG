@@ -2,146 +2,156 @@ package com.example.buyacoffee.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.buyacoffee.Helper.ChangeNumberItemsListener
 import com.example.buyacoffee.adapter.CartAdapter
 import com.example.buyacoffee.databinding.ActivityCartBinding
-import com.example.buyacoffee.model.ItemsModel
-import com.example.buyacoffee.repositorio.CartRepo
-import com.google.firebase.database.FirebaseDatabase
+import com.example.buyacoffee.viewmodel.CartViewModel
 
+/**
+ * Activity que muestra el carrito de compras siguiendo el patrón MVVM.
+ * Se encarga únicamente de la presentación y delegación de eventos al ViewModel.
+ */
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private lateinit var managmentCar: CartRepo
-
-    private var impuesto: Double = 0.0
-    private var descuentoAplicado = 0.0
+    private lateinit var cartViewModel: CartViewModel
+    private lateinit var cartAdapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        managmentCar = CartRepo(this)
 
-        initiCart()
-
-    }
-
-    private fun initiCart() {
-        calculateCart()
-        initCartlist()
-        initButtons()
+        initViewModel()
+        setupRecyclerView()
+        setupObservers()
+        setupClickListeners()
     }
 
     /**
-     * Inicializa el RecyclerView con los productos del carrito usando CartAdapter.
+     * Inicializa el ViewModel
      */
-    private fun initCartlist() {
+    private fun initViewModel() {
+        cartViewModel = ViewModelProvider(this)[CartViewModel::class.java]
+    }
 
-        binding.cartView.layoutManager =
-            LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL,
-                false)
-
-        binding.cartView.adapter = CartAdapter(
-            managmentCar.getListCart(),
+    /**
+     * Configura el RecyclerView del carrito
+     */
+    private fun setupRecyclerView() {
+        binding.cartView.layoutManager = LinearLayoutManager(
             this,
-            object : ChangeNumberItemsListener {
-                override fun onChanged() {
-                    calculateCart()
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+
+        // Inicializar el adapter con lista vacía
+        cartAdapter = CartAdapter(
+            arrayListOf(),
+            this,
+            object:CartAdapterListener {
+                override fun onIncreaseQuantity(position: Int) {
+                    cartViewModel.increaseItemQuantity(position)
+                }
+
+                override fun onDecreaseQuantity(position: Int) {
+                    cartViewModel.decreaseItemQuantity(position)
+                }
+
+                override fun onRemoveItem(position: Int) {
+                    cartViewModel.removeItem(position)
                 }
             }
         )
+
+        binding.cartView.adapter = cartAdapter
     }
 
-    private fun initButtons() {
-
-        binding.payBtn.setOnClickListener {
-            val cartItems: ArrayList<ItemsModel> = ArrayList(managmentCar.getListCart())
-            val totalFee = Math.round((managmentCar.getTotalFee() + impuesto ) * 100) / 100.0
-            val intent = Intent(this, TicketActivity::class.java)
-
-
-            if (cartItems.isEmpty()) {
-                Toast.makeText(this, "El carrito está vacío", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener // Esto detiene la ejecución si el carrito está vacío
-            }
-            intent.putExtra("cartItems", cartItems)
-            intent.putExtra("totalFee", totalFee)
-
-            startActivity(intent)
-
+    /**
+     * Configura los observadores del ViewModel
+     */
+    private fun setupObservers() {
+        // Observar cambios en la lista del carrito
+        cartViewModel.cartItems.observe(this) { items ->
+            cartAdapter.updateItems(items)
         }
 
+        // Observar cambios en el subtotal
+        cartViewModel.subtotal.observe(this) { subtotal ->
+            binding.totalFreetxt.text = "${subtotal} €"
+        }
+
+        // Observar cambios en el impuesto
+        cartViewModel.tax.observe(this) { tax ->
+            binding.ivatxt.text = "${tax} €"
+        }
+
+        // Observar cambios en el total
+        cartViewModel.total.observe(this) { total ->
+            binding.totalTxt.text = "${total} €"
+        }
+
+        // Observar mensajes de error
+        cartViewModel.errorMessage.observe(this) { message ->
+            if (message.isNotEmpty()) {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Observar mensajes de éxito
+        cartViewModel.successMessage.observe(this) { message ->
+            if (message.isNotEmpty()) {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+    }
+
+    /**
+     * Configura los listeners de los botones
+     */
+    private fun setupClickListeners() {
+        // Botón de pagar
+        binding.payBtn.setOnClickListener {
+            cartViewModel.processPayment { cartItems, totalFee ->
+                val intent = Intent(this, TicketActivity::class.java)
+                intent.putExtra("cartItems", cartItems)
+                intent.putExtra("totalFee", totalFee)
+                startActivity(intent)
+            }
+        }
+
+        // Botón de regresar
         binding.backBtn.setOnClickListener {
             startActivity(Intent(this, DashBoardActivity::class.java))
         }
 
-        /**
-         * Configura el botón de aplicar descuento.
-         * Verifica el código en Firebase y si es válido, aplica el porcentaje correspondiente.
-         */
-
+        // Botón de aplicar descuento
         binding.applyDiscountBtn.setOnClickListener {
-            val code = binding.discountCodeEditText.text.toString().uppercase().trim()
-            val ref = FirebaseDatabase.getInstance().getReference("Descuentos").child(code)
-            var valor: Double
-
-            if (code.isBlank()) {
-                Toast.makeText(this, "Introduce un código", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            //addOnSuccessListener es un callBack que se ejecuta cuando la operación de lectura es exitosa.
-            ref.get().addOnSuccessListener { snapshot ->
-                if (snapshot.exists()) {
-                     valor = snapshot.child("valor").value.toString().toDoubleOrNull() ?: 0.0
-                    descuentoAplicado = valor
-
-                    Toast.makeText(this, "Descuento del $valor% aplicado", Toast.LENGTH_SHORT)
-                        .show()
-
-                    calculateCart()
+            val code = binding.discountCodeEditText.text.toString()
+            cartViewModel.applyDiscountCode(code) { success, message ->
+                if (success) {
+                    binding.discountCodeEditText.setText("")
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Código no válido", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
-            }.addOnFailureListener {
-                Toast.makeText(this, "Error al validar el código", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 
     /**
-     * Calcula el total del carrito aplicando descuentos e impuestos.
-     * Actualiza los textos en pantalla con los valores correspondientes.
+     * Interface para manejar eventos del adapter
      */
-    private fun calculateCart() {
-        val iva = 0.02
-        val baseFee = managmentCar.getTotalFee()
-
-        // Aplicar descuento por porcentaje si existe
-        val descuento = (baseFee * descuentoAplicado / 100.0).let {
-            Math.round(it * 100) / 100.0
-        }
-
-        val precioConDescuento = baseFee - descuento
-
-        impuesto = Math.round((precioConDescuento * iva) * 100) / 100.0
-        val total = Math.round((precioConDescuento + impuesto ) * 100) / 100.0
-        val itemTotal = Math.round(precioConDescuento * 100) / 100.0
-
-        binding.totalFreetxt.text = "$itemTotal €"
-        binding.ivatxt.text = "$impuesto €"
-        binding.totalTxt.text = "$total €"
+    interface CartAdapterListener {
+        fun onIncreaseQuantity(position: Int)
+        fun onDecreaseQuantity(position: Int)
+        fun onRemoveItem(position: Int)
     }
-
-
-
-
-
 }

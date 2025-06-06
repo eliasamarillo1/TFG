@@ -18,7 +18,6 @@ class DashViewModel : ViewModel() {
     private val _allItems = MutableLiveData<MutableList<ItemsModel>>()
     private val _displayedItems = MutableLiveData<MutableList<ItemsModel>>()
     val displayedItems: LiveData<MutableList<ItemsModel>> get() = _displayedItems
-
     /**
      * Carga la lista de banners desde el repositorio.
      *
