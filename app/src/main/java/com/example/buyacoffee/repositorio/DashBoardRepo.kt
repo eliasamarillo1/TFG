@@ -17,6 +17,10 @@ import com.google.firebase.database.ValueEventListener
  */
 class DashBoardRepo {
 
+    companion object {
+        private const val TAG = "DashBoardRepo"
+    }
+
     //TODO meter esto en rsc
     private val firebaseDatabase = FirebaseDatabase.getInstance("https://buyacoffe-ea2cb-default-rtdb.europe-west1.firebasedatabase.app")
 
@@ -44,7 +48,8 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e(TAG, "Error cargando banners: ${error.message}")
+                listData.value = mutableListOf()
             }
         })
         return listData
@@ -73,7 +78,8 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e(TAG, "Error cargando categorías: ${error.message}")
+                listData.value = mutableListOf()
             }
         })
         return listData
@@ -102,7 +108,8 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e(TAG, "Error cargando populares: ${error.message}")
+                listData.value = mutableListOf()
             }
         })
         return listData
@@ -133,7 +140,8 @@ class DashBoardRepo {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e(TAG, "Error cargando la categoría $categoryId: ${error.message}")
+                itemsLiveData.value = mutableListOf()
             }
         })
         return itemsLiveData
@@ -162,7 +170,7 @@ class DashBoardRepo {
 
             override fun onCancelled(error: DatabaseError) {
                 // Manejar el error según sea necesario
-                Log.e("DashBoardRepo", "Error loading all items: ${error.message}")
+                Log.e(TAG, "Error loading all items: ${error.message}")
                 listData.value = mutableListOf() // Devolver una lista vacía en caso de error
             }
         })

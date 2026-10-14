@@ -22,6 +22,7 @@ data class OrderModel(
  */
 data class OrderItemModel(
     var title: String = "",
+    var size: String = "",
     var price: Double = 0.0,
     var numberInCart: Int = 0
 )

@@ -9,6 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.Helper.Precios
+import com.example.buyacoffee.Helper.Tamano
 import com.example.buyacoffee.model.ItemsModel
 import com.example.buyacoffee.R
 import com.example.buyacoffee.databinding.ActivityDetailBinding
@@ -17,6 +19,7 @@ class DetailActivity : AppCompatActivity() {
     lateinit var binding: ActivityDetailBinding
     private lateinit var item: ItemsModel
     private lateinit var cesta:ManagmentCar
+    private var tamano = Tamano.TERCIO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,28 +28,36 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         cesta = ManagmentCar(this)
+        savedInstanceState?.getString(KEY_TAMANO)?.let { tamano = Tamano.valueOf(it) }
         bundle()
         initSizeList()
 
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_TAMANO, tamano.name)
+    }
+
     private fun initSizeList() {
         binding.apply {
+            quintosBtn.setOnClickListener { seleccionarTamano(Tamano.QUINTO) }
+            terciosBtn.setOnClickListener { seleccionarTamano(Tamano.TERCIO) }
+            medioLitroBtn.setOnClickListener { seleccionarTamano(Tamano.MEDIO_LITRO) }
+        }
+        seleccionarTamano(tamano)
+    }
 
-            quintosBtn.setOnClickListener {
-                quintosBtn.setBackgroundResource(R.drawable.stroke_green_bg)
-                terciosBtn.setBackgroundResource(0)
-                medioLitroBtn.setBackgroundResource(0)
-            }
-            terciosBtn.setOnClickListener {
-                quintosBtn.setBackgroundResource(0)
-                terciosBtn.setBackgroundResource(R.drawable.stroke_green_bg)
-                medioLitroBtn.setBackgroundResource(0)
-            }
-            medioLitroBtn.setOnClickListener {
-                quintosBtn.setBackgroundResource(0)
-                terciosBtn.setBackgroundResource(0)
-                medioLitroBtn.setBackgroundResource(R.drawable.stroke_green_bg)
-            }
+    /**
+     * Marca el tamaño elegido y actualiza el precio mostrado.
+     */
+    private fun seleccionarTamano(nuevo: Tamano) {
+        tamano = nuevo
+        binding.apply {
+            quintosBtn.setBackgroundResource(if (nuevo == Tamano.QUINTO) R.drawable.stroke_green_bg else 0)
+            terciosBtn.setBackgroundResource(if (nuevo == Tamano.TERCIO) R.drawable.stroke_green_bg else 0)
+            medioLitroBtn.setBackgroundResource(if (nuevo == Tamano.MEDIO_LITRO) R.drawable.stroke_green_bg else 0)
+            tvPrecio.text = Precios.formatEuro(Precios.precioConTamano(item.price, nuevo))
         }
     }
 
@@ -60,32 +71,39 @@ class DetailActivity : AppCompatActivity() {
             title.text = item.title
             descriptionTxt.text = item.description
 
-            tvPrecio.text= item.price.toString()
             ratingTxt.text = item.rating.toString()
 
             addToCartBtn.setOnClickListener {
-                item.numberInCart = Integer.valueOf(
-                    tvCantidadNumerica.text.toString()
+                // Se guarda una copia con el precio del tamaño elegido; item conserva el precio base
+                val itemCesta = item.copy(
+                    price = Precios.precioConTamano(item.price, tamano),
+                    size = tamano.etiqueta,
+                    numberInCart = cantidadActual()
                 )
-                cesta.insertItems(item)
+                cesta.insertItems(itemCesta)
             }
             backBtnFlecha.setOnClickListener {
                 finish()
             }
 
             plusCart.setOnClickListener{
-                tvCantidadNumerica.text = (item.numberInCart + 1).toString()
-                item.numberInCart++
+                tvCantidadNumerica.text = (cantidadActual() + 1).toString()
             }
 
             minusBtn.setOnClickListener{
-                var number = Integer.parseInt(tvCantidadNumerica.text.toString())
+                val number = cantidadActual()
                 if(number>1){
-                    number--
-                    tvCantidadNumerica.text = number.toString()
+                    tvCantidadNumerica.text = (number - 1).toString()
                 }
             }
 
         }
+    }
+
+    private fun cantidadActual(): Int =
+        binding.tvCantidadNumerica.text.toString().toIntOrNull() ?: 1
+
+    companion object {
+        private const val KEY_TAMANO = "tamano"
     }
 }

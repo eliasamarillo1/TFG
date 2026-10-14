@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.buyacoffee.activity.DetailActivity
 import com.example.buyacoffee.model.ItemsModel
 import com.example.buyacoffee.databinding.ViewholderPopularBinding
+import com.example.buyacoffee.Helper.Precios
 
 class PopularAdapter(var items: List<ItemsModel>) :
     RecyclerView.Adapter<PopularAdapter.ViewHolder>() {
@@ -26,7 +27,7 @@ class PopularAdapter(var items: List<ItemsModel>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.titleTxt.text = items[position].title
-        holder.binding.pricetxt.text = "$" + items[position].price.toString()
+        holder.binding.pricetxt.text = Precios.formatEuro(items[position].price)
 
         Glide.with(context).load(items[position].picUrl[0]).into(holder.binding.pic)
         holder.itemView.setOnClickListener {

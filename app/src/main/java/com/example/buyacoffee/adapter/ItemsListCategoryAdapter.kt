@@ -11,6 +11,7 @@ import com.example.buyacoffee.activity.DetailActivity
 import com.example.buyacoffee.databinding.ViewholderItemPicLeftBinding
 import com.example.buyacoffee.databinding.ViewholderItemPicRigthBinding
 import com.example.buyacoffee.model.ItemsModel
+import com.example.buyacoffee.Helper.Precios
 
 class ItemsListCategoryAdapter(val items: MutableList<ItemsModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -112,7 +113,7 @@ class ItemsListCategoryAdapter(val items: MutableList<ItemsModel>) :
         }
         bindCommonData(
             item.title,
-            "${item.price} €",
+            Precios.formatEuro(item.price),
             item.rating.toFloat(),
             item.picUrl[0]
         )

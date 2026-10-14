@@ -6,8 +6,10 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.buyacoffee.Helper.CartCalculator
 import com.example.buyacoffee.Helper.ChangeNumberItemsListener
 import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.Helper.Precios
 import com.example.buyacoffee.adapter.CartAdapter
 import com.example.buyacoffee.databinding.ActivityCartBinding
 import com.example.buyacoffee.model.ItemsModel
@@ -17,7 +19,6 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var managmentCar: ManagmentCar
 
-    private var impuesto: Double = 0.0
     private var descuentoAplicado = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,7 @@ class CartActivity : AppCompatActivity() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         managmentCar = ManagmentCar(this)
+        descuentoAplicado = savedInstanceState?.getDouble(KEY_DESCUENTO) ?: 0.0
 
         initiCart()
 
@@ -62,7 +64,7 @@ class CartActivity : AppCompatActivity() {
 
         binding.payBtn.setOnClickListener {
             val cartItems: ArrayList<ItemsModel> = ArrayList(managmentCar.getListCart())
-            val totalFee = Math.round((managmentCar.getTotalFee() + impuesto ) * 100) / 100.0
+            val totalFee = CartCalculator.calcular(cartItems, descuentoAplicado).total
             val intent = Intent(this, TicketActivity::class.java)
 
 
@@ -74,6 +76,10 @@ class CartActivity : AppCompatActivity() {
             intent.putExtra("totalFee", totalFee)
 
             startActivity(intent)
+            // El pedido ya viaja en el Intent: se vacía la cesta para que no siga llena
+            // si se vuelve con el botón atrás del sistema, y se cierra esta pantalla
+            managmentCar.clearCart()
+            finish()
 
         }
 
@@ -117,31 +123,23 @@ class CartActivity : AppCompatActivity() {
 
 
     /**
-     * Calcula el total del carrito aplicando descuentos e impuestos.
+     * Calcula el total del carrito aplicando el descuento y desglosa el IVA incluido.
      * Actualiza los textos en pantalla con los valores correspondientes.
      */
     private fun calculateCart() {
-        val iva = 0.02
-        val baseFee = managmentCar.getTotalFee()
+        val resumen = CartCalculator.calcular(managmentCar.getListCart(), descuentoAplicado)
 
-        // Aplicar descuento por porcentaje si existe
-        val descuento = (baseFee * descuentoAplicado / 100.0).let {
-            Math.round(it * 100) / 100.0
-        }
-
-        val precioConDescuento = baseFee - descuento
-
-        impuesto = Math.round((precioConDescuento * iva) * 100) / 100.0
-        val total = Math.round((precioConDescuento + impuesto ) * 100) / 100.0
-        val itemTotal = Math.round(precioConDescuento * 100) / 100.0
-
-        binding.totalFreetxt.text = "$itemTotal €"
-        binding.ivatxt.text = "$impuesto €"
-        binding.totalTxt.text = "$total €"
+        binding.totalFreetxt.text = Precios.formatEuro(resumen.baseImponible)
+        binding.ivatxt.text = Precios.formatEuro(resumen.impuesto)
+        binding.totalTxt.text = Precios.formatEuro(resumen.total)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putDouble(KEY_DESCUENTO, descuentoAplicado)
+    }
 
-
-
-
+    companion object {
+        private const val KEY_DESCUENTO = "descuento"
+    }
 }

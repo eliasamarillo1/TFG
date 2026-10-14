@@ -2,8 +2,6 @@ package com.example.buyacoffee.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -41,13 +39,11 @@ class CategoryAdapter(val items: MutableList<CategoryModel>) :
             notifyItemChanged(selectedPosition)
 
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(context, ItemsListActivity::class.java).apply {
-                    putExtra("id",item.id.toString())
-                    putExtra("title",item.title)
-                }
-                ContextCompat.startActivity(context,intent,null)
-            },500)
+            val intent = Intent(context, ItemsListActivity::class.java).apply {
+                putExtra("id",item.id.toString())
+                putExtra("title",item.title)
+            }
+            ContextCompat.startActivity(context,intent,null)
         }
 
         if (selectedPosition == position) {

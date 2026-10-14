@@ -19,22 +19,21 @@ class ManagmentCar(val context: Context) {
     }
 
     /**
-     * Inserta un ítem al carrito. Si el ítem ya existe, actualiza su cantidad.
+     * Inserta un ítem al carrito. Si el ítem ya existe (mismo producto y tamaño), actualiza su cantidad.
      *
      * @param item El objeto [ItemsModel] que se desea añadir o actualizar en el carrito.
      */
     fun insertItems(item: ItemsModel) {
         val listItem = getListCart()
-        val existAlready = listItem.any { it.title == item.title }
-        val index = listItem.indexOfFirst { it.title == item.title }
+        val index = listItem.indexOfFirst { it.title == item.title && it.size == item.size }
 
-        if (existAlready) {
+        if (index >= 0) {
             listItem[index].numberInCart = item.numberInCart
         } else {
             listItem.add(item)
         }
         tinyDB.putListObject("CartList", listItem)
-        Toast.makeText(context, "Added to your Cart", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Añadido a la cesta", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -96,17 +95,9 @@ class ManagmentCar(val context: Context) {
      * @return El total a pagar como [Double].
      */
     fun getTotalFee(): Double {
-        val listItem = getListCart()
-        var fee = 0.0
-        for (item in listItem) {
-
-            fee += item.price * item.numberInCart
-
-            Log.d("Item", item.title + " " + item.price + " " + item.numberInCart)
-        }
+        val fee = CartCalculator.subtotal(getListCart())
         Log.d("Total", fee.toString())
         return fee
-
     }
     /**
      * Limpia el carrito de compras.

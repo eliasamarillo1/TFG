@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.Helper.Precios
 import com.example.buyacoffee.databinding.ActivityTicketBinding
 import com.example.buyacoffee.model.ItemsModel
 import com.google.firebase.auth.FirebaseAuth
@@ -35,7 +36,7 @@ class TicketActivity : AppCompatActivity() {
         // Al girar la pantalla la actividad se recrea: se conserva el código y no se vuelve a subir el pedido
         orderCode = savedInstanceState?.getString(KEY_ORDER_CODE) ?: generateRandomCode()
         binding.textViewOrderCode.text = "Tu pedido [$orderCode] ha sido enviado!"
-        binding.textViewTotalFee.text = "Total: %.2f".format(totalFee) + " €"
+        binding.textViewTotalFee.text = "Total: ${Precios.formatEuro(totalFee)}"
 
         displayCartItems(cartItems)
 
@@ -56,7 +57,7 @@ class TicketActivity : AppCompatActivity() {
 
         cartItems?.forEach { item ->
             val itemTextView = TextView(this).apply {
-                text = "${item.title} x ${item.numberInCart} - $%.2f".format(item.price * item.numberInCart)
+                text = "${item.nombreConTamano()} x ${item.numberInCart} - ${Precios.formatEuro(item.price * item.numberInCart)}"
                 textSize = 16f
             }
             binding.linearLayoutItems.addView(itemTextView)
@@ -85,6 +86,7 @@ class TicketActivity : AppCompatActivity() {
         val itemsReducidos = items?.map {
             mapOf(
                 "title" to it.title,
+                "size" to it.size,
                 "price" to it.price,
                 "numberInCart" to it.numberInCart
             )

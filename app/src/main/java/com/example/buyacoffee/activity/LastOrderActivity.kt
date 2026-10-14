@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.Helper.Precios
 import com.example.buyacoffee.databinding.ActivityLastOrderBinding
 import com.example.buyacoffee.databinding.ViewholderOrderBinding
 import com.example.buyacoffee.model.OrderModel
@@ -75,12 +76,13 @@ class LastOrderActivity : AppCompatActivity() {
 
         card.tvCodigo.text = "Pedido [${pedido.codigo}]"
         card.tvFecha.text = pedido.fecha
-        card.tvTotal.text = "Total: %.2f €".format(pedido.total)
+        card.tvTotal.text = "Total: ${Precios.formatEuro(pedido.total)}"
 
         pedido.items.forEach { item ->
             val itemView = TextView(this)
+            val nombre = if (item.size.isBlank()) item.title else "${item.title} (${item.size})"
             itemView.text =
-                "${item.title} x${item.numberInCart} - %.2f €".format(item.price * item.numberInCart)
+                "$nombre x${item.numberInCart} - ${Precios.formatEuro(item.price * item.numberInCart)}"
             itemView.textSize = 16f
             card.itemsContainer.addView(itemView)
         }

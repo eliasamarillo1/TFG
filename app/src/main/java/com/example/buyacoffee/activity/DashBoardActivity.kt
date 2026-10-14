@@ -8,10 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.buyacoffee.Helper.Precios
 import com.example.buyacoffee.R
 import com.example.buyacoffee.adapter.CategoryAdapter
 import com.example.buyacoffee.adapter.PopularAdapter
@@ -26,7 +28,10 @@ import kotlinx.coroutines.launch
 class DashBoardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashBinding
-    private val viewModel = DashViewModel()
+    // ViewModelProvider conserva el ViewModel al girar la pantalla y no se vuelve a descargar todo
+    private val viewModel: DashViewModel by lazy { ViewModelProvider(this)[DashViewModel::class.java] }
+    /** El usuario ha pulsado Explorer antes de que llegase la lista de ítems. */
+    private var explorarPendiente = false
     private lateinit var itemsAdapter: PopularAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,19 +125,26 @@ class DashBoardActivity : AppCompatActivity() {
         }
     }
     /**
-     * Inicializa la visualización de todos los ítems disponibles.
+     * Carga la lista completa de ítems (buscador y explorador).
+     * Solo sustituye a los populares cuando hay una búsqueda activa.
      */
     private fun initAllItemsDisplay() {
-        showProgressBar(binding.progressBarPopulares, true)
         viewModel.loadAllItems()
 
         viewModel.displayedItems.observe(this) { items ->
+            if (viewModel.consultaActual == null) return@observe
             if (!::itemsAdapter.isInitialized) {
                 setupRecyclerView(items)
             } else {
                 itemsAdapter.updateList(items)
             }
-            showProgressBar(binding.progressBarPopulares, false)
+        }
+
+        viewModel.allItems.observe(this) { items ->
+            if (explorarPendiente) {
+                explorarPendiente = false
+                handleItemsResult(items)
+            }
         }
     }
 
@@ -166,7 +178,7 @@ class DashBoardActivity : AppCompatActivity() {
     private fun setupItemView(binding: ViewholderPopularBinding, item: ItemsModel) {
         // Configurar título y precio exactamente como en el adapter
         binding.titleTxt.text = item.title
-        binding.pricetxt.text = "$${item.price}"
+        binding.pricetxt.text = Precios.formatEuro(item.price)
 
         Glide.with(this)
             .load(item.picUrl.firstOrNull())
@@ -186,7 +198,7 @@ class DashBoardActivity : AppCompatActivity() {
         return View.OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 updateTitle(getString(R.string.productos))
-                viewModel.loadAllItems()
+                viewModel.filterItems("")
             }
         }
     }
@@ -198,6 +210,7 @@ class DashBoardActivity : AppCompatActivity() {
     private fun createCloseListener(): SearchView.OnCloseListener {
         return SearchView.OnCloseListener {
             updateTitle(getString(R.string.populares))
+            viewModel.clearSearch()
             restorePopularItems()
             false
         }
@@ -212,10 +225,9 @@ class DashBoardActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrBlank()) {
-                    updateTitle(getString(R.string.productos))
-                    viewModel.filterItems(newText)
-                }
+                // Con el texto vacío se muestran todos los productos
+                updateTitle(getString(R.string.productos))
+                viewModel.filterItems(newText)
                 return true
             }
         }
@@ -297,16 +309,16 @@ class DashBoardActivity : AppCompatActivity() {
         }
     }
     /**
-     * Carga un ítem aleatorio y lo muestra en un diálogo.
+     * Muestra un ítem aleatorio en un diálogo. Si la lista aún no ha llegado de Firebase,
+     * se espera a que llegue (ver [initAllItemsDisplay]) en lugar de decir que no hay ítems.
      */
     private fun loadRandomItem() {
-        lifecycleScope.launch {
-            try {
-                val items = viewModel.getAllItemsOnce()
-                handleItemsResult(items)
-            } catch (e: Exception) {
-                showErrorToast("Error al cargar ítems: ${e.message}")
-            }
+        val items = viewModel.allItems.value
+        if (items == null) {
+            explorarPendiente = true
+            viewModel.loadAllItems()
+        } else {
+            handleItemsResult(items)
         }
     }
 

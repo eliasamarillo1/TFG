@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.buyacoffee.Helper.ChangeNumberItemsListener
 import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.Helper.Precios
 import com.example.buyacoffee.databinding.ViewholderCartBinding
 import com.example.buyacoffee.model.ItemsModel
 
@@ -38,9 +39,9 @@ class CartAdapter
 
     override fun onBindViewHolder(holder: CartAdapter.Viewholder, position: Int) {
         val item = listItemSelected[position]
-        holder.binding.titleTxt.text = item.title
-        holder.binding.feeEachItem.text = "${item.price} €"
-        holder.binding.totalEachItem.text = "${Math.round(item.numberInCart * item.price)}€"
+        holder.binding.titleTxt.text = item.nombreConTamano()
+        holder.binding.feeEachItem.text = Precios.formatEuro(item.price)
+        holder.binding.totalEachItem.text = Precios.formatEuro(item.numberInCart * item.price)
         holder.binding.numberItem.text = item.numberInCart.toString()
 
         Glide.with(holder.itemView.context).load(item.picUrl[0]).apply(
