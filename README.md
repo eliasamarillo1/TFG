@@ -8,11 +8,12 @@ El usuario navega por un catálogo de cervezas organizado por categorías, consu
 
 ## Funcionalidades
 
+- **Inicio de sesión y registro** con correo y contraseña (Firebase Authentication).
 - **Pantalla de inicio** y **panel principal** con banner, categorías, productos populares, buscador y un "explorador" que sugiere una cerveza al azar.
 - **Detalle de producto** con descripción, valoración, selección de tamaño (quinto, tercio o medio litro) y de cantidad.
 - **Cesta de la compra**: sumar, restar y eliminar productos, códigos de descuento validados contra Firebase e IVA del 10 % incluido en el precio y desglosado.
 - **Ticket** con el código del pedido, que se sube a Firebase.
-- **Último pedido**: consulta del pedido más reciente guardado en el dispositivo.
+- **Mis pedidos**: historial de pedidos del usuario, leído de Firebase.
 
 ## Stack técnico
 
@@ -23,7 +24,8 @@ El usuario navega por un catálogo de cervezas organizado por categorías, consu
 | Interfaz | Layouts XML con ViewBinding, RecyclerView, Material Components |
 | Arquitectura | Activities + ViewModel y LiveData (`DashViewModel`) + repositorio (`DashBoardRepo`) |
 | Datos remotos | Firebase Realtime Database (nodos `Banner`, `Category`, `Popular`, `Items`, `Descuentos`, `Pedidos`) |
-| Persistencia local | `SharedPreferences` a través de `TinyDB` (cesta y último pedido) |
+| Autenticación | Firebase Authentication |
+| Persistencia local | `SharedPreferences` a través de `TinyDB` (cesta) |
 | Imágenes | Glide |
 | Monitorización | Firebase Crashlytics |
 | Build | Gradle (Kotlin DSL) con catálogo de versiones (`gradle/libs.versions.toml`) |
@@ -34,10 +36,10 @@ El usuario navega por un catálogo de cervezas organizado por categorías, consu
 
 ```
 app/src/main/java/com/example/buyacoffee/
-├── activity/      Pantallas (Inicio, DashBoard, Detail, ItemsList, Cart, Ticket, LastOrder)
+├── activity/      Pantallas (Login, Inicio, DashBoard, Detail, ItemsList, Cart, Ticket, LastOrder)
 ├── adapter/       Adaptadores de RecyclerView
 ├── Helper/        Cesta (ManagmentCar), cálculo de la cesta (CartCalculator), tamaños y formato de precios (Precios), TinyDB
-├── model/         Modelos de datos (ItemsModel, CategoryModel, BannerModel)
+├── model/         Modelos de datos (ItemsModel, CategoryModel, BannerModel, OrderModel)
 ├── repositorio/   Acceso a Firebase (DashBoardRepo)
 └── viewmodel/     DashViewModel
 app/src/test/      Tests unitarios (JVM)
@@ -60,7 +62,9 @@ app/src/test/      Tests unitarios (JVM)
 2. Ábrelo en Android Studio (`File > Open`) y espera a que Gradle sincronice.
 3. Pulsa **Run ▶** con un emulador o dispositivo seleccionado.
 
-La configuración de Firebase (`app/google-services.json`) ya está incluida, así que la app se conecta a la base de datos del proyecto sin pasos adicionales.
+La configuración de Firebase (`app/google-services.json`) ya está incluida, así que la app se conecta a la base de datos del proyecto sin pasos adicionales. Al abrirla, regístrate con un correo y una contraseña o inicia sesión.
+
+Si montas tu propio proyecto de Firebase, activa el proveedor **Correo electrónico/contraseña** en Authentication y publica las reglas de `database.rules.json` (por ejemplo con `firebase deploy --only database`).
 
 ### Desde la línea de comandos
 
