@@ -98,17 +98,9 @@ class ManagmentCar(val context: Context) {
      * @return El total a pagar como [Double].
      */
     fun getTotalFee(): Double {
-        val listItem = getListCart()
-        var fee = 0.0
-        for (item in listItem) {
-
-            fee += item.price * item.numberInCart
-
-            Log.d("Item", item.title + " " + item.price + " " + item.numberInCart)
-        }
+        val fee = CartCalculator.subtotal(getListCart())
         Log.d("Total", fee.toString())
         return fee
-
     }
     /**
      * Limpia el carrito de compras.

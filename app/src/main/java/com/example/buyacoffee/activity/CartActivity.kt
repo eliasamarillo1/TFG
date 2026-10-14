@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.buyacoffee.Helper.CartCalculator
 import com.example.buyacoffee.Helper.ChangeNumberItemsListener
 import com.example.buyacoffee.Helper.ManagmentCar
 import com.example.buyacoffee.adapter.CartAdapter
@@ -121,23 +122,12 @@ class CartActivity : AppCompatActivity() {
      * Actualiza los textos en pantalla con los valores correspondientes.
      */
     private fun calculateCart() {
-        val iva = 0.02
-        val baseFee = managmentCar.getTotalFee()
+        val resumen = CartCalculator.calcular(managmentCar.getListCart(), descuentoAplicado)
+        impuesto = resumen.impuesto
 
-        // Aplicar descuento por porcentaje si existe
-        val descuento = (baseFee * descuentoAplicado / 100.0).let {
-            Math.round(it * 100) / 100.0
-        }
-
-        val precioConDescuento = baseFee - descuento
-
-        impuesto = Math.round((precioConDescuento * iva) * 100) / 100.0
-        val total = Math.round((precioConDescuento + impuesto ) * 100) / 100.0
-        val itemTotal = Math.round(precioConDescuento * 100) / 100.0
-
-        binding.totalFreetxt.text = "$itemTotal €"
-        binding.ivatxt.text = "$impuesto €"
-        binding.totalTxt.text = "$total €"
+        binding.totalFreetxt.text = "${resumen.baseImponible} €"
+        binding.ivatxt.text = "${resumen.impuesto} €"
+        binding.totalTxt.text = "${resumen.total} €"
     }
 
 
