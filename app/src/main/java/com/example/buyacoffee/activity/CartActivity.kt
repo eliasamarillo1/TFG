@@ -18,7 +18,6 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var managmentCar: ManagmentCar
 
-    private var impuesto: Double = 0.0
     private var descuentoAplicado = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +62,7 @@ class CartActivity : AppCompatActivity() {
 
         binding.payBtn.setOnClickListener {
             val cartItems: ArrayList<ItemsModel> = ArrayList(managmentCar.getListCart())
-            val totalFee = Math.round((managmentCar.getTotalFee() + impuesto ) * 100) / 100.0
+            val totalFee = CartCalculator.calcular(cartItems, descuentoAplicado).total
             val intent = Intent(this, TicketActivity::class.java)
 
 
@@ -123,7 +122,6 @@ class CartActivity : AppCompatActivity() {
      */
     private fun calculateCart() {
         val resumen = CartCalculator.calcular(managmentCar.getListCart(), descuentoAplicado)
-        impuesto = resumen.impuesto
 
         binding.totalFreetxt.text = "${resumen.baseImponible} €"
         binding.ivatxt.text = "${resumen.impuesto} €"
