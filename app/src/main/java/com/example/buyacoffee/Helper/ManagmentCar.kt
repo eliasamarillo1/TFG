@@ -16,8 +16,6 @@ class ManagmentCar(val context: Context) {
     private val tinyDB = TinyDB(context)
     companion object {
         private const val CART_KEY = "CartList"
-        private const val LAST_ORDER_ITEMS_KEY = "LastOrderItems"
-        private const val LAST_ORDER_CODE_KEY = "LastOrderCode"
     }
 
     /**
@@ -108,17 +106,6 @@ class ManagmentCar(val context: Context) {
         tinyDB.remove("CartList")
     }
 
-    fun saveLastOrder(codigo: String, items: List<ItemsModel>) {
-        tinyDB.putListObject(LAST_ORDER_ITEMS_KEY, ArrayList(items))
-        tinyDB.putString(LAST_ORDER_CODE_KEY, codigo)
-    }
-    fun getLastOrderItems(): ArrayList<ItemsModel> {
-        return tinyDB.getListObject(LAST_ORDER_ITEMS_KEY) ?: arrayListOf()
-    }
-
-    fun getLastOrderCode(): String {
-        return tinyDB.getString(LAST_ORDER_CODE_KEY) ?: ""
-    }
 
 
 

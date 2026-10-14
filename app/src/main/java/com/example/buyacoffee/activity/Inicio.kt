@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.buyacoffee.databinding.ActivityInicioBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class Inicio : AppCompatActivity() {
     private lateinit var binding: ActivityInicioBinding
@@ -26,7 +27,13 @@ class Inicio : AppCompatActivity() {
 
     private fun setUp(){
         binding.btPantallaInicio.setOnClickListener {
-            startActivity(Intent(this, DashBoardActivity::class.java))
+            // Sin sesión iniciada se pasa por la pantalla de acceso; con sesión, directo al Dashboard
+            val destino = if (FirebaseAuth.getInstance().currentUser != null) {
+                DashBoardActivity::class.java
+            } else {
+                LoginActivity::class.java
+            }
+            startActivity(Intent(this, destino))
         }
     }
 }
