@@ -20,6 +20,7 @@ import com.example.buyacoffee.databinding.ViewholderPopularBinding
 import com.example.buyacoffee.model.ItemsModel
 import com.example.buyacoffee.repositorio.showProgressBar
 import com.example.buyacoffee.viewmodel.DashViewModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class DashBoardActivity : AppCompatActivity() {
@@ -31,6 +32,14 @@ class DashBoardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // El catálogo y los pedidos exigen sesión: sin usuario se vuelve al login
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         binding = ActivityDashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

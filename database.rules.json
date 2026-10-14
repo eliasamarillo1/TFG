@@ -1,0 +1,29 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "Banner": { ".read": "auth != null" },
+    "Category": { ".read": "auth != null" },
+    "Popular": { ".read": "auth != null" },
+    "Items": {
+      ".read": "auth != null",
+      ".indexOn": ["categoryId"]
+    },
+
+    "Descuentos": {
+      "$codigo": { ".read": "auth != null" }
+    },
+
+    "Pedidos": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".indexOn": ["timestamp"],
+        "$codigo": {
+          ".write": "auth != null && auth.uid === $uid && !data.exists()",
+          ".validate": "newData.hasChildren(['codigo', 'total', 'fecha', 'items', 'timestamp']) && newData.child('codigo').val() === $codigo && newData.child('total').isNumber() && newData.child('total').val() >= 0 && newData.child('fecha').isString() && newData.child('timestamp').val() === now"
+        }
+      }
+    }
+  }
+}
