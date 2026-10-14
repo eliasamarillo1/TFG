@@ -9,8 +9,8 @@ El usuario navega por un catálogo de cervezas organizado por categorías, consu
 ## Funcionalidades
 
 - **Pantalla de inicio** y **panel principal** con banner, categorías, productos populares, buscador y un "explorador" que sugiere una cerveza al azar.
-- **Detalle de producto** con descripción, valoración, precio y selección de cantidad.
-- **Cesta de la compra**: sumar, restar y eliminar productos, códigos de descuento validados contra Firebase y cálculo de IVA.
+- **Detalle de producto** con descripción, valoración, selección de tamaño (quinto, tercio o medio litro) y de cantidad.
+- **Cesta de la compra**: sumar, restar y eliminar productos, códigos de descuento validados contra Firebase e IVA del 10 % incluido en el precio y desglosado.
 - **Ticket** con el código del pedido, que se sube a Firebase.
 - **Último pedido**: consulta del pedido más reciente guardado en el dispositivo.
 
@@ -36,7 +36,7 @@ El usuario navega por un catálogo de cervezas organizado por categorías, consu
 app/src/main/java/com/example/buyacoffee/
 ├── activity/      Pantallas (Inicio, DashBoard, Detail, ItemsList, Cart, Ticket, LastOrder)
 ├── adapter/       Adaptadores de RecyclerView
-├── Helper/        Cesta (ManagmentCar), cálculo de la cesta (CartCalculator), TinyDB
+├── Helper/        Cesta (ManagmentCar), cálculo de la cesta (CartCalculator), tamaños y formato de precios (Precios), TinyDB
 ├── model/         Modelos de datos (ItemsModel, CategoryModel, BannerModel)
 ├── repositorio/   Acceso a Firebase (DashBoardRepo)
 └── viewmodel/     DashViewModel
@@ -75,7 +75,10 @@ En Windows usa `gradlew.bat` en lugar de `./gradlew`.
 
 Los tests unitarios están en `app/src/test/` y se ejecutan en la JVM, sin emulador.
 
-`CartCalculatorTest` cubre el cálculo de la cesta: subtotal, descuento en porcentaje, IVA, total y redondeo a dos decimales. Para poder probarlo, la lógica se ha separado de la interfaz en `Helper/CartCalculator.kt`, que no depende de Android.
+- `CartCalculatorTest` cubre el cálculo de la cesta: subtotal, descuento en porcentaje, IVA incluido, total y redondeo a dos decimales.
+- `PreciosTest` cubre el precio según el tamaño y el formato en euros.
+
+Para poder probarlos, esta lógica está separada de la interfaz en `Helper/CartCalculator.kt` y `Helper/Precios.kt`, que no dependen de Android.
 
 ## Integración continua
 
