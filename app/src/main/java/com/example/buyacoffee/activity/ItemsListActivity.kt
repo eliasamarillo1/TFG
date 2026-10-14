@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.buyacoffee.adapter.ItemsListCategoryAdapter
 import com.example.buyacoffee.databinding.ActivityItemsListBinding
@@ -15,7 +16,7 @@ import com.example.buyacoffee.viewmodel.DashViewModel
 
 class ItemsListActivity : AppCompatActivity() {
     lateinit var binding: ActivityItemsListBinding
-    private val viewModel = DashViewModel()
+    private val viewModel: DashViewModel by lazy { ViewModelProvider(this)[DashViewModel::class.java] }
     private var id: String = ""
     private var title: String = ""
 
