@@ -40,8 +40,8 @@
     <string name="descuento">Descuento</string>
     <string name="aplicar">Aplicar</string>
     <string name="signoeuro">€</string>
-    <string name="sub_total">Sub Total</string>
-    <string name="total_iva">Total IVA</string>
+    <string name="sub_total">Base imponible</string>
+    <string name="total_iva">IVA incluido (10 %)</string>
     <string name="total">TOTAL</string>
     <string name="ultimo_pedido_realizado">Ultimo pedido realizado</string>
     <string name="pedido_completado">pedidocompl</string>

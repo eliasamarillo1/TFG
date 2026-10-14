@@ -2,6 +2,7 @@ package com.example.buyacoffee.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.example.buyacoffee.model.BannerModel
 import com.example.buyacoffee.model.CategoryModel
@@ -56,21 +57,36 @@ class DashViewModel : ViewModel() {
         return repo.loadItemByCategory(categoryId)
     }
 
+    /** Lista completa de ítems; se usa para el buscador y para el explorador. */
+    val allItems: LiveData<MutableList<ItemsModel>> get() = _allItems
+
+    /** Texto buscado ahora mismo, o null si el buscador está cerrado. */
+    var consultaActual: String? = null
+        private set
+
+    private var allItemsSource: LiveData<MutableList<ItemsModel>>? = null
+    private val allItemsObserver = Observer<MutableList<ItemsModel>> { items ->
+        _allItems.value = items
+        // Si había una búsqueda activa, se vuelve a aplicar con los datos nuevos
+        consultaActual?.let { filterItems(it) }
+    }
+
     /**
-     * Carga la lista completa de ítems desde el repositorio.
+     * Empieza a escuchar la lista completa de ítems. Solo se suscribe una vez,
+     * aunque se llame varias veces, y el observador se quita en [onCleared].
      */
     fun loadAllItems() {
-        repo.loadAllItems().observeForever {
-            _allItems.value = it // Almacena la lista completa
-            _displayedItems.value = it // Inicialmente, muestra todos los ítems
-        }
+        if (allItemsSource != null) return
+        allItemsSource = repo.loadAllItems().also { it.observeForever(allItemsObserver) }
     }
+
     /**
      * Filtra la lista de ítems mostrados basándose en una consulta.
      *
      * @param query Texto de búsqueda.
      */
     fun filterItems(query: String?) {
+        consultaActual = query ?: ""
         val currentAllItems = _allItems.value ?: mutableListOf()
         val filteredList = if (query.isNullOrEmpty()) {
             currentAllItems // Si el texto está vacío, muestra la lista completa
@@ -83,8 +99,13 @@ class DashViewModel : ViewModel() {
         _displayedItems.value = filteredList // Actualiza la lista mostrada
     }
 
-     fun getAllItemsOnce(): List<ItemsModel> {
-        loadAllItems()
-        return displayedItems.value ?: emptyList()
+    /** Cierra la búsqueda: la lista vuelve a ser la de populares. */
+    fun clearSearch() {
+        consultaActual = null
+    }
+
+    override fun onCleared() {
+        allItemsSource?.removeObserver(allItemsObserver)
+        super.onCleared()
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.buyacoffee.Helper.CartCalculator
 import com.example.buyacoffee.Helper.ChangeNumberItemsListener
 import com.example.buyacoffee.Helper.ManagmentCar
+import com.example.buyacoffee.Helper.Precios
 import com.example.buyacoffee.adapter.CartAdapter
 import com.example.buyacoffee.databinding.ActivityCartBinding
 import com.example.buyacoffee.model.ItemsModel
@@ -26,6 +27,7 @@ class CartActivity : AppCompatActivity() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         managmentCar = ManagmentCar(this)
+        descuentoAplicado = savedInstanceState?.getDouble(KEY_DESCUENTO) ?: 0.0
 
         initiCart()
 
@@ -74,6 +76,10 @@ class CartActivity : AppCompatActivity() {
             intent.putExtra("totalFee", totalFee)
 
             startActivity(intent)
+            // El pedido ya viaja en el Intent: se vacía la cesta para que no siga llena
+            // si se vuelve con el botón atrás del sistema, y se cierra esta pantalla
+            managmentCar.clearCart()
+            finish()
 
         }
 
@@ -117,19 +123,23 @@ class CartActivity : AppCompatActivity() {
 
 
     /**
-     * Calcula el total del carrito aplicando descuentos e impuestos.
+     * Calcula el total del carrito aplicando el descuento y desglosa el IVA incluido.
      * Actualiza los textos en pantalla con los valores correspondientes.
      */
     private fun calculateCart() {
         val resumen = CartCalculator.calcular(managmentCar.getListCart(), descuentoAplicado)
 
-        binding.totalFreetxt.text = "${resumen.baseImponible} €"
-        binding.ivatxt.text = "${resumen.impuesto} €"
-        binding.totalTxt.text = "${resumen.total} €"
+        binding.totalFreetxt.text = Precios.formatEuro(resumen.baseImponible)
+        binding.ivatxt.text = Precios.formatEuro(resumen.impuesto)
+        binding.totalTxt.text = Precios.formatEuro(resumen.total)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putDouble(KEY_DESCUENTO, descuentoAplicado)
+    }
 
-
-
-
+    companion object {
+        private const val KEY_DESCUENTO = "descuento"
+    }
 }

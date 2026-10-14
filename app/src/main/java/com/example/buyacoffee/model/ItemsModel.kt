@@ -13,6 +13,7 @@ import java.io.Serializable
  * @property numberInCart Número de unidades del producto en el carrito.
  * @property extra Información adicional o personalizada del producto.
  * @property id Identificador único del producto.
+ * @property size Tamaño elegido en la ficha (vacío si no aplica).
  * Implementa [Serializable] para permitir que los objetos puedan ser pasados entre componentes de Android.
  */
 data class ItemsModel(
@@ -23,8 +24,13 @@ data class ItemsModel(
     var rating: Double = 0.0,
     var numberInCart: Int = 0,
     var extra: String = "",
-    var id: String = ""
-) : Serializable
+    var id: String = "",
+    var size: String = ""
+) : Serializable {
+
+    /** Nombre para cesta y ticket, con el tamaño si lo hay. */
+    fun nombreConTamano(): String = if (size.isBlank()) title else "$title ($size)"
+}
 
 
 object LastOrderManager {
